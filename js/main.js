@@ -16,6 +16,9 @@ function showGame(id) {
         case 'wordChoiceGame': startWordChoice(); break;
         case 'listeningGame': startListening(); break;
         case 'scrambleGame': startScramble(); break;
+        case 'sentenceOrderGame': startSentenceOrder(); break;
+        case 'elementsGame': startElements(); break;
+        case 'comprehensionGame': startComprehension(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
         case 'storyGame': renderStory(currentStory); break;
