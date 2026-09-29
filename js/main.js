@@ -40,8 +40,9 @@ let voicePref = null;
 function pickVoice() {
     if (voicePref) return voicePref;
     const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+    // Mandarin only: zh-CN first, then zh-TW, then any zh fallback
     voicePref =
-        voices.find(v => /zh[-_]HK/i.test(v.lang)) ||
+        voices.find(v => /zh[-_]CN/i.test(v.lang)) ||
         voices.find(v => /zh[-_]TW/i.test(v.lang)) ||
         voices.find(v => /^zh/i.test(v.lang)) || null;
     return voicePref;
@@ -52,7 +53,7 @@ function speak(text, lang) {
     if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang || 'zh-HK';
+    u.lang = lang || 'zh-CN';
     const v = pickVoice();
     if (v) u.voice = v;
     u.rate = 0.85;
@@ -72,7 +73,7 @@ function renderStory(i) {
     const s = stories[i];
     const el = document.getElementById('storyContent');
     el.innerHTML = s.content.split('').map(ch =>
-        `<span style="cursor:pointer" onclick="speak('${ch}', 'zh-HK')" title="Tap to hear">${escapeHtml(ch)}</span>`
+        `<span style="cursor:pointer" onclick="speak('${ch}')" title="Tap to hear">${escapeHtml(ch)}</span>`
     ).join('') + `<div style="color:var(--muted); font-size:0.95rem; margin-top:12px;">${escapeHtml(s.translation)}</div>`;
 }
 
