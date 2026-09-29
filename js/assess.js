@@ -106,7 +106,8 @@ function answerElement(btn, cat) {
 }
 
 // --- 3. 閱讀理解 COMPREHENSION ---
-let compState = { q: null };
+// Each option has a 🔊; tapping the option selects it (and speaks it). Submit checks.
+let compState = { q: null, selected: null };
 
 function startComprehension() {
     resetGameScore();
@@ -116,7 +117,7 @@ function startComprehension() {
 function nextComp() {
     let q;
     do { q = compQs[Math.floor(Math.random() * compQs.length)]; } while (compState.q && compQs.length > 1 && q.q === compState.q.q);
-    compState.q = q;
+    compState = { q, selected: null };
     document.getElementById('compQuestion').textContent = q.q;
     const grid = document.getElementById('compOptions');
     grid.innerHTML = '';
@@ -124,18 +125,34 @@ function nextComp() {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.style.fontSize = '1.05rem';
-        btn.textContent = opt;
-        btn.onclick = () => answerComp(btn, opt);
+        btn.dataset.opt = opt;
+        btn.innerHTML = `<span class="opt-zh">${escapeHtml(opt)}</span><span class="opt-speak" title="Listen">🔊</span>`;
+        btn.onclick = (e) => {
+            if (e.target.closest('.opt-speak')) { speak(opt); return; }
+            selectComp(btn, opt);
+        };
         grid.appendChild(btn);
     });
+    document.getElementById('compSubmit').disabled = true;
 }
 
-function answerComp(btn, opt) {
+function selectComp(btn, opt) {
+    document.querySelectorAll('#compOptions .option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    compState.selected = opt;
+    speak(opt);
+    document.getElementById('compSubmit').disabled = false;
+}
+
+function submitComp() {
+    if (!compState.selected) return;
     const buttons = document.querySelectorAll('#compOptions .option-btn');
     buttons.forEach(b => b.disabled = true);
-    const correct = opt === compState.q.a;
-    btn.classList.add(correct ? 'correct' : 'wrong');
-    if (!correct) buttons.forEach(b => { if (b.textContent === compState.q.a) b.classList.add('correct'); });
+    document.getElementById('compSubmit').disabled = true;
+    const correct = compState.selected === compState.q.a;
+    const sel = [...buttons].find(b => b.dataset.opt === compState.selected);
+    if (sel) sel.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) buttons.forEach(b => { if (b.dataset.opt === compState.q.a) b.classList.add('correct'); });
     onAnswer(correct, 'Reading Comprehension');
     setTimeout(nextComp, 1500);
 }
