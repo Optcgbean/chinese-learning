@@ -39,23 +39,36 @@ function showReward(text) {
 }
 
 // === SPEECH ===
-let voicePref = null;
-function pickVoice() {
-    if (voicePref) return voicePref;
-    const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
-    // Mandarin only: zh-CN first, then zh-TW, then any zh fallback
-    voicePref =
-        voices.find(v => /zh[-_]CN/i.test(v.lang)) ||
-        voices.find(v => /zh[-_]TW/i.test(v.lang)) ||
-        voices.find(v => /^zh/i.test(v.lang)) || null;
-    return voicePref;
+// Mandarin voices only — NEVER zh-HK/yue/Cantonese.
+// On HK devices the only installed zh voice is often Cantonese (Sin-Ji), which
+// the old "any zh" fallback picked, so "Mandarin" buttons spoke Cantonese.
+let mandarinVoices = [];
+function refreshVoices() {
+    if (!window.speechSynthesis) return;
+    const vs = speechSynthesis.getVoices();
+    mandarinVoices = vs.filter(v => {
+        const tag = (v.lang + ' ' + v.name).toLowerCase();
+        if (/hk|yue|cantonese|廣東|粤/.test(tag)) return false;
+        return /^zh([-_](cn|tw|sg))?/i.test(v.lang.trim());
+    });
 }
-if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => { voicePref = null; };
+function pickVoice() {
+    if (!window.speechSynthesis) return null;
+    if (!mandarinVoices.length) refreshVoices();
+    return mandarinVoices.find(v => /cn/i.test(v.lang)) ||
+           mandarinVoices.find(v => /tw/i.test(v.lang)) ||
+           mandarinVoices[0] || null;
+}
+if (window.speechSynthesis) {
+    refreshVoices();
+    speechSynthesis.onvoiceschanged = refreshVoices;
+}
 
 function speak(text, lang) {
     if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
+    // hard Mandarin tag even when a voice is found — some engines re-read the tag
     u.lang = lang || 'zh-CN';
     const v = pickVoice();
     if (v) u.voice = v;
