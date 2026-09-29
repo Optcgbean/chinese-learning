@@ -91,12 +91,21 @@ function flipCard() {
     card.classList.toggle('flipped', fcState.flipped);
     if (fcState.flipped) {
         document.getElementById('fcFrontPinyin').textContent = fcState.word.pinyin;
-        speak(fcState.word.zh, 'zh-HK');
+        speak(fcState.word.zh);
     }
 }
 
+// Flashcards = free practice, no Robux reward.
 function fcMark(correct) {
-    onAnswer(correct, 'Flashcards');
+    const fb = document.getElementById('gameFeedback');
+    if (correct) {
+        gameScore.correct++;
+        if (fb) { fb.textContent = '✅ Nice! You knew it!'; fb.className = 'feedback correct'; }
+    } else {
+        gameScore.wrong++;
+        if (fb) { fb.textContent = "❌ Keep practicing — you'll get it!"; fb.className = 'feedback wrong'; }
+    }
+    updateGameStats();
     setTimeout(nextFlashcard, 650);
 }
 
@@ -119,6 +128,7 @@ function startMatching() {
         el.className = 'match-card';
         el.textContent = c.text;
         el.dataset.key = c.key;
+        el.dataset.kind = c.kind;
         el.onclick = () => selectMatch(el);
         grid.appendChild(el);
     });
@@ -127,6 +137,8 @@ function startMatching() {
 function selectMatch(el) {
     if (matchState.lock || el.classList.contains('matched') || el === matchState.first) return;
     el.classList.add('selected');
+    // Auto-pronounce in Mandarin when the selected card is the Chinese side
+    if (el.dataset.kind === 'zh') speak(el.dataset.key);
     if (!matchState.first) { matchState.first = el; return; }
     matchState.lock = true;
     const a = matchState.first, b = el;
@@ -171,8 +183,12 @@ function nextWordChoice() {
     opts.forEach(o => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
-        btn.textContent = o.zh;
-        btn.onclick = () => answerWordChoice(btn, o.zh);
+        btn.dataset.zh = o.zh;
+        btn.innerHTML = `<span class="opt-zh">${escapeHtml(o.zh)}</span><span class="opt-speak" title="Listen in Mandarin">🔊</span>`;
+        btn.onclick = (e) => {
+            if (e.target.closest('.opt-speak')) { speak(o.zh); return; }
+            answerWordChoice(btn, o.zh);
+        };
         grid.appendChild(btn);
     });
 }
@@ -183,14 +199,13 @@ function answerWordChoice(btn, zh) {
     const correct = zh === wcState.answer;
     btn.classList.add(correct ? 'correct' : 'wrong');
     if (!correct) {
-        buttons.forEach(b => { if (b.textContent === wcState.answer) b.classList.add('correct'); });
+        buttons.forEach(b => { if (b.dataset.zh === wcState.answer) b.classList.add('correct'); });
     } else {
-        speak(wcState.answer, 'zh-HK');
+        speak(wcState.answer);
     }
     document.getElementById('wcPinyinHint').textContent = 'Pinyin: ' +
         (activeWords().find(w => w.zh === wcState.answer) || {}).pinyin;
-    onAnswer(correct, 'Word Choice');
-    setTimeout(nextWordChoice, 1200);
+    onAnswer(correct, 'Word Choice');    setTimeout(nextWordChoice, 1200);
 }
 
 // === 4. LISTENING (hear the word, pick it) ===
@@ -214,7 +229,7 @@ function nextListening() {
         btn.onclick = () => answerListening(btn, o.zh);
         grid.appendChild(btn);
     });
-    setTimeout(() => speak(correct.zh, 'zh-HK'), 300);
+    setTimeout(() => speak(correct.zh), 300);
 }
 
 function answerListening(btn, zh) {
