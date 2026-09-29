@@ -21,7 +21,6 @@ function showGame(id) {
         case 'comprehensionGame': startComprehension(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
-        case 'storyGame': renderStory(currentStory); break;
     }
 }
 
@@ -75,25 +74,6 @@ function speak(text, lang) {
     u.rate = 0.85;
     speechSynthesis.speak(u);
 }
-
-// === STORIES ===
-let currentStory = 0;
-
-function selectStory(i) {
-    currentStory = i;
-    document.querySelectorAll('#storyTabs .tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
-    renderStory(i);
-}
-
-function renderStory(i) {
-    const s = stories[i];
-    const el = document.getElementById('storyContent');
-    el.innerHTML = s.content.split('').map(ch =>
-        `<span style="cursor:pointer" onclick="speak('${ch}')" title="Tap to hear">${escapeHtml(ch)}</span>`
-    ).join('') + `<div style="color:var(--muted); font-size:0.95rem; margin-top:12px;">${escapeHtml(s.translation)}</div>`;
-}
-
-function speakStory() { speak(stories[currentStory].content); }
 
 // === WORD SET SELECT ===
 function changeWordSet() {

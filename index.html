@@ -90,11 +90,6 @@
                 <div class="icon">❓</div><h3>閱讀理解 Comprehension</h3>
                 <p>Reading comprehension MC — stories + vocab meanings from the assessment.</p>
             </div>
-            <div class="game-card" onclick="showGame('storyGame')">
-                <div class="reward-tag">📖</div>
-                <div class="icon">📚</div><h3>Story Time</h3>
-                <p>Read along — tap any character to hear it aloud.</p>
-            </div>
             <div class="game-card boss" onclick="showGame('bossGame')">
                 <div class="reward-tag">2.5💰/hit</div>
                 <div class="icon">👹</div><h3>BOSS BATTLE</h3>
@@ -249,21 +244,6 @@
         <div class="center" style="margin-bottom:10px"><button class="speak-inline" onclick="speakCompQuestion()">🔊 Listen (Mandarin)</button></div>
         <div class="options-grid" id="compOptions"></div>
         <div class="center"><button id="compSubmit" class="submit-btn" onclick="submitComp()" disabled>✔ Submit</button></div>
-        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
-    </div>
-
-    <!-- 8. STORY TIME -->
-    <div class="game-area" id="storyGame">
-        <h2>📖 Story Time</h2>
-        <div class="tabs" id="storyTabs">
-            <button class="tab active" onclick="selectStory(0)">The Cat</button>
-            <button class="tab" onclick="selectStory(1)">My Family</button>
-            <button class="tab" onclick="selectStory(2)">At School</button>
-        </div>
-        <div id="storyContent" style="line-height:2.1; font-size:1.35rem; margin:18px 0"></div>
-        <div class="center">
-            <button class="btn btn-success" onclick="speakStory()">🔊 Read Aloud</button>
-        </div>
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
     </div>
 
