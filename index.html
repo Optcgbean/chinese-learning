@@ -72,7 +72,22 @@
             <div class="game-card" onclick="showGame('fillBlankGame')">
                 <div class="reward-tag">0.5💰</div>
                 <div class="icon">✏️</div><h3>Fill the Blank</h3>
-                <p>Complete the sentence with the missing character.</p>
+                <p>Complete the sentence with the missing word (incl. assessment sentences!).</p>
+            </div>
+            <div class="game-card" onclick="showGame('sentenceOrderGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="icon">📋</div><h3>排句成段 Sentence Order</h3>
+                <p>Tap the story events in the right order — 狼來了, 守株待兔, 北風和太陽!</p>
+            </div>
+            <div class="game-card" onclick="showGame('elementsGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="icon">🔍</div><h3>故事要素 Story Elements</h3>
+                <p>敘事六要素: is it 時間, 地點, 人物, 開始, 經過 or 結果?</p>
+            </div>
+            <div class="game-card" onclick="showGame('comprehensionGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="icon">❓</div><h3>閱讀理解 Comprehension</h3>
+                <p>Reading comprehension MC — stories + vocab meanings from the assessment.</p>
             </div>
             <div class="game-card" onclick="showGame('storyGame')">
                 <div class="reward-tag">📖</div>
@@ -209,6 +224,32 @@
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">🏳️ Flee (keep your Robux)</button></div>
     </div>
 
+    <!-- 9. SENTENCE ORDER -->
+    <div class="game-area" id="sentenceOrderGame">
+        <h2>📋 排句成段 Sentence Order</h2>
+        <div class="center" id="soStory" style="font-size:1.2rem; margin-bottom:14px"></div>
+        <div class="order-box" id="soChips"></div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
+    <!-- 10. STORY ELEMENTS -->
+    <div class="game-area" id="elementsGame">
+        <h2>🔍 故事要素 Story Elements</h2>
+        <div class="center" style="margin-bottom:6px"><span class="lvl-badge" id="elStoryTag"></span></div>
+        <div class="el-item" id="elItem"></div>
+        <div class="options-grid" id="elCats" style="grid-template-columns:repeat(3,1fr); margin-top:16px"></div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
+    <!-- 11. COMPREHENSION -->
+    <div class="game-area" id="comprehensionGame">
+        <h2>❓ 閱讀理解 Comprehension</h2>
+        <div class="center" id="compQuestion" style="font-size:1.25rem; margin:12px 0; font-weight:bold"></div>
+        <div class="center" style="margin-bottom:10px"><button class="speak-inline" onclick="speakCompQuestion()">🔊 Listen (Mandarin)</button></div>
+        <div class="options-grid" id="compOptions"></div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
     <!-- 8. STORY TIME -->
     <div class="game-area" id="storyGame">
         <h2>📖 Story Time</h2>
@@ -237,9 +278,11 @@
 <div id="robuxPopup">+0.5 💰 Robux!</div>
 
 <script src="js/data.js"></script>
+<script src="js/assess-data.js"></script>
 <script src="js/wallet.js"></script>
 <script src="js/games.js"></script>
 <script src="js/games2.js"></script>
+<script src="js/assess.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
