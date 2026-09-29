@@ -11,7 +11,9 @@ function startSentenceOrder() {
 function nextSentenceOrder() {
     const s = orderStories[Math.floor(Math.random() * orderStories.length)];
     soState = { story: s, shuffled: shuffle(s.events.slice()), progress: 0, lock: false };
-    document.getElementById('soStory').innerHTML = s.title + ' <span style="color:var(--muted); font-size:0.95rem">— tap the sentences in story order!</span>';
+    document.getElementById('soStory').innerHTML = s.title +
+        ' <button class="speak-inline" onclick="speakStoryOrder()" title="Hear the full story in order">🔊 Full Story</button>' +
+        ' <span style="color:var(--muted); font-size:0.95rem">— tap the sentences in story order!</span>';
     const box = document.getElementById('soChips');
     box.innerHTML = '';
     soState.shuffled.forEach(text => {
@@ -21,6 +23,11 @@ function nextSentenceOrder() {
         chip.onclick = () => soPick(chip, text);
         box.appendChild(chip);
     });
+}
+
+// speak the full correct story (the answer) in order
+function speakStoryOrder() {
+    if (soState.story) speak(soState.story.events.join('。'));
 }
 
 function soPick(chip, text) {
