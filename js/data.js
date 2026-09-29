@@ -153,21 +153,3 @@
             ]
         };
 
-        const stories = [
-            {
-                title: 'The Cat 小貓',
-                content: '我家有一隻小貓。牠的名字叫咪咪。咪咪喜歡吃魚。牠每天在客廳裡睡覺。晚上，牠會跑到我的床上。我很喜歡咪咪。',
-                translation: 'I have a little cat at home. Its name is Mimi. Mimi likes to eat fish. It sleeps in the living room every day. At night, it runs to my bed. I like Mimi very much.'
-            },
-            {
-                title: 'My Family 我的家庭',
-                content: '我家有四個人。爸爸、媽媽、姐姐和我。爸爸是醫生，媽媽是老師。姐姐讀五年級，我讀三年級。我們一家人很快樂。',
-                translation: 'There are four people in my family. Dad, Mom, older sister, and me. Dad is a doctor, Mom is a teacher. Sister is in Grade 5, I am in Grade 3. Our family is very happy.'
-            },
-            {
-                title: 'At School 在學校',
-                content: '我今天在學校學了很多東西。中文課我學了新的詞語。數學課我學了加法。英文課我唱了歌。放學後，我和同學一起玩。今天真是開心的一天！',
-                translation: 'I learned many things at school today. In Chinese class, I learned new words. In Math class, I learned addition. In English class, I sang songs. After school, I played with classmates. Today was a happy day!'
-            }
-        ];
-
