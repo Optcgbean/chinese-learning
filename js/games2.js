@@ -44,7 +44,7 @@ const blankTemplates = [
     { zh: '__謝你。', en: 'Thank you.', blank: '謝' }
 ];
 
-let fbState = { blank: '', bank: [], template: null };
+let fbState = { blank: '', bank: [], template: null, selected: null };
 
 function startFillBlank() {
     resetGameScore();
@@ -57,6 +57,8 @@ function nextFillBlank() {
     const t = assessFills[Math.floor(Math.random() * assessFills.length)];
     fbState.blank = t.blank;
     fbState.template = t;
+    fbState.selected = null;
+    document.getElementById('fbSubmit').disabled = true;
     document.getElementById('fbSentence').innerHTML = escapeHtml(t.zh).replace('__', '<span class="blank">?</span>');
     document.getElementById('fbEnglish').textContent = t.en;
     const setZh = (wordSets.assessment || []).map(w => w.zh);
@@ -69,7 +71,7 @@ function nextFillBlank() {
         const chip = document.createElement('button');
         chip.className = 'word-chip';
         chip.textContent = z;
-        chip.onclick = () => answerFillBlank(chip, z);
+        chip.onclick = () => selectFillBlank(chip, z);
         bankEl.appendChild(chip);
     });
 }
@@ -96,11 +98,23 @@ function speakFBAnswer() {
     if (fbState.blank) speak(fbState.blank);
 }
 
-function answerFillBlank(chip, z) {
+// Tap a chip = select it AND hear the pronunciation. Submit checks.
+function selectFillBlank(chip, z) {
+    document.querySelectorAll('#fbBank .word-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    fbState.selected = z;
+    speak(z);
+    document.getElementById('fbSubmit').disabled = false;
+}
+
+function submitFillBlank() {
+    if (!fbState.selected) return;
     const chips = document.querySelectorAll('#fbBank .word-chip');
-    chips.forEach(c => c.style.pointerEvents = 'none');
-    const correct = z === fbState.blank;
-    chip.style.borderColor = correct ? '#22c55e' : '#ef4444';
+    chips.forEach(c => { c.style.pointerEvents = 'none'; c.classList.remove('selected'); });
+    document.getElementById('fbSubmit').disabled = true;
+    const correct = fbState.selected === fbState.blank;
+    const sel = [...chips].find(c => c.textContent === fbState.selected);
+    if (sel) sel.style.borderColor = correct ? '#22c55e' : '#ef4444';
     if (!correct) chips.forEach(c => { if (c.textContent === fbState.blank) c.style.borderColor = '#22c55e'; });
     document.getElementById('fbSentence').innerHTML =
         document.getElementById('fbSentence').innerHTML.replace('<span class="blank">?</span>', `<b style="color:var(--gold)">${fbState.blank}</b>`);
