@@ -77,7 +77,7 @@ function renderStory(i) {
     ).join('') + `<div style="color:var(--muted); font-size:0.95rem; margin-top:12px;">${escapeHtml(s.translation)}</div>`;
 }
 
-function speakStory() { speak(stories[currentStory].content, 'zh-HK'); }
+function speakStory() { speak(stories[currentStory].content); }
 
 // === WORD SET SELECT ===
 function changeWordSet() {
