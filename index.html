@@ -514,6 +514,10 @@
                 <div class="score-value" id="streak">0</div>
                 <div class="score-label">🔥 Streak</div>
             </div>
+            <div class="score-item">
+                <div class="score-value" id="robuxEarned" style="color: #f59e0b;">0.0</div>
+                <div class="score-label">💰 Robux Earned</div>
+            </div>
         </div>
 
         <!-- Settings -->
@@ -692,7 +696,13 @@
             <div class="reward-emoji">🎉</div>
             <div class="reward-title">Great Job!</div>
             <div class="reward-text" id="rewardText">You completed the game!</div>
+            <div class="reward-text" style="margin-top: 10px; font-size: 1.5rem; color: #f59e0b; font-weight: bold;" id="rewardRobux"></div>
             <button class="btn btn-primary" onclick="backToMenu()" style="margin-top: 20px;">Continue</button>
+        </div>
+
+        <!-- Robux Popup -->
+        <div id="robuxPopup" style="position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 24px; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5); display: none; z-index: 1000; font-size: 1.1rem;">
+            +0.1 💰 Robux!
         </div>
     </div>
 
@@ -879,6 +889,7 @@
         let wordsLearned = 0;
         let gamesPlayed = 0;
         let streak = 0;
+        let robux = 0;
         let matchedPairs = 0;
         let selectedCards = [];
         let currentSentence = null;
@@ -915,13 +926,14 @@
                 wordsLearned = stats.wordsLearned || 0;
                 gamesPlayed = stats.gamesPlayed || 0;
                 streak = stats.streak || 0;
+                robux = stats.robux || 0;
                 updateStats();
             }
         }
 
         function saveStats() {
             localStorage.setItem('chineseLearningStats', JSON.stringify({
-                score, wordsLearned, gamesPlayed, streak
+                score, wordsLearned, gamesPlayed, streak, robux
             }));
         }
 
@@ -930,13 +942,27 @@
             document.getElementById('wordsLearned').textContent = wordsLearned;
             document.getElementById('gamesPlayed').textContent = gamesPlayed;
             document.getElementById('streak').textContent = streak;
+            document.getElementById('robuxEarned').textContent = robux.toFixed(1);
         }
 
         function addScore(points) {
             score += points;
             streak++;
+            robux += 0.1;
             updateStats();
             saveStats();
+            showRobuxPopup();
+        }
+
+        function showRobuxPopup() {
+            const popup = document.getElementById('robuxPopup');
+            popup.style.display = 'block';
+            popup.classList.remove('pop');
+            void popup.offsetWidth; // Reflow to restart animation
+            popup.classList.add('pop');
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 1500);
         }
 
         function breakStreak() {
@@ -989,6 +1015,7 @@
         function showReward(text) {
             document.querySelectorAll('.game-area').forEach(el => el.classList.remove('active'));
             document.getElementById('rewardText').textContent = text;
+            document.getElementById('rewardRobux').textContent = `💰 Total Robux: ${robux.toFixed(1)}`;
             document.getElementById('rewardScreen').classList.add('active');
             gamesPlayed++;
             updateStats();
