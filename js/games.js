@@ -1,6 +1,6 @@
 // === GAME ENGINE — part 1: flashcards, matching, word choice ===
 
-let currentSet = 'grade3';
+let currentSet = 'assessment';
 let currentDiff = 'normal';
 let gameScore = { correct: 0, wrong: 0 };
 
@@ -9,7 +9,7 @@ function setDifficulty(d) {
     document.querySelectorAll('.diff-btn').forEach(b => b.classList.toggle('active', b.dataset.diff === d));
 }
 
-function activeWords() { return wordSets[currentSet] || wordSets.grade3; }
+function activeWords() { return wordSets[currentSet] || wordSets.assessment; }
 
 function pickWord(exclude) {
     const words = activeWords();

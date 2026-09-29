@@ -107,8 +107,11 @@ function init() {
     renderCombo();
     const sel = document.getElementById('wordSetSelect');
     if (sel) {
-        sel.innerHTML = Object.keys(wordSets).map(k =>
-            `<option value="${k}">${k === 'grade3' ? 'Grade 3' : k[0].toUpperCase() + k.slice(1)}</option>`
+        // Assessment-prep focus: only the P3 進展性評估 set is offered.
+        // (Other sets remain in js/data.js — re-add their keys here to restore.)
+        const ENABLED_SETS = ['assessment'];
+        sel.innerHTML = ENABLED_SETS.map(k =>
+            `<option value="${k}">${k === 'assessment' ? 'Assessment 評估詞語' : k[0].toUpperCase() + k.slice(1)}</option>`
         ).join('');
         sel.value = currentSet;
     }
