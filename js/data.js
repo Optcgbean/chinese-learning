@@ -1,0 +1,173 @@
+// === DATA ===
+        const wordSets = {
+            grade3: [
+                {zh: '學校', en: 'school', pinyin: 'xué xiào'},
+                {zh: '老師', en: 'teacher', pinyin: 'lǎo shī'},
+                {zh: '同學', en: 'classmate', pinyin: 'tóng xué'},
+                {zh: '書本', en: 'book', pinyin: 'shū běn'},
+                {zh: '鉛筆', en: 'pencil', pinyin: 'qiān bǐ'},
+                {zh: '功課', en: 'homework', pinyin: 'gōng kè'},
+                {zh: '考試', en: 'exam', pinyin: 'kǎo shì'},
+                {zh: '閱讀', en: 'reading', pinyin: 'yuè dú'},
+                {zh: '寫作', en: 'writing', pinyin: 'xiě zuò'},
+                {zh: '聽力', en: 'listening', pinyin: 'tīng lì'},
+                {zh: '說話', en: 'speaking', pinyin: 'shuō huà'},
+                {zh: '中文', en: 'Chinese', pinyin: 'zhōng wén'},
+                {zh: '英文', en: 'English', pinyin: 'yīng wén'},
+                {zh: '數學', en: 'Math', pinyin: 'shù xué'},
+                {zh: '科學', en: 'Science', pinyin: 'kē xué'},
+                {zh: '時間', en: 'time', pinyin: 'shí jiān'},
+                {zh: '今天', en: 'today', pinyin: 'jīn tiān'},
+                {zh: '明天', en: 'tomorrow', pinyin: 'míng tiān'},
+                {zh: '昨天', en: 'yesterday', pinyin: 'zuó tiān'},
+                {zh: '星期', en: 'week', pinyin: 'xīng qī'}
+            ],
+            animals: [
+                {zh: '貓', en: 'cat', pinyin: 'māo'},
+                {zh: '狗', en: 'dog', pinyin: 'gǒu'},
+                {zh: '鳥', en: 'bird', pinyin: 'niǎo'},
+                {zh: '魚', en: 'fish', pinyin: 'yú'},
+                {zh: '兔', en: 'rabbit', pinyin: 'tù'},
+                {zh: '馬', en: 'horse', pinyin: 'mǎ'},
+                {zh: '牛', en: 'cow', pinyin: 'niú'},
+                {zh: '羊', en: 'sheep', pinyin: 'yáng'},
+                {zh: '豬', en: 'pig', pinyin: 'zhū'},
+                {zh: '雞', en: 'chicken', pinyin: 'jī'},
+                {zh: '鴨', en: 'duck', pinyin: 'yā'},
+                {zh: '猴', en: 'monkey', pinyin: 'hóu'},
+                {zh: '象', en: 'elephant', pinyin: 'xiàng'},
+                {zh: '虎', en: 'tiger', pinyin: 'hǔ'},
+                {zh: '獅', en: 'lion', pinyin: 'shī'},
+                {zh: '熊', en: 'bear', pinyin: 'xióng'},
+                {zh: '蛇', en: 'snake', pinyin: 'shé'},
+                {zh: '龜', en: 'turtle', pinyin: 'guī'},
+                {zh: '蟻', en: 'ant', pinyin: 'yǐ'},
+                {zh: '蝶', en: 'butterfly', pinyin: 'dié'}
+            ],
+            food: [
+                {zh: '米飯', en: 'rice', pinyin: 'mǐ fàn'},
+                {zh: '麵', en: 'noodles', pinyin: 'miàn'},
+                {zh: '水', en: 'water', pinyin: 'shuǐ'},
+                {zh: '茶', en: 'tea', pinyin: 'chá'},
+                {zh: '牛奶', en: 'milk', pinyin: 'niú nǎi'},
+                {zh: '果汁', en: 'juice', pinyin: 'guǒ zhī'},
+                {zh: '麵包', en: 'bread', pinyin: 'miàn bāo'},
+                {zh: '蛋糕', en: 'cake', pinyin: 'dàn gāo'},
+                {zh: '水果', en: 'fruit', pinyin: 'shuǐ guǒ'},
+                {zh: '蘋果', en: 'apple', pinyin: 'píng guǒ'},
+                {zh: '橙', en: 'orange', pinyin: 'chéng'},
+                {zh: '香蕉', en: 'banana', pinyin: 'xiāng jiāo'},
+                {zh: '肉', en: 'meat', pinyin: 'ròu'},
+                {zh: '雞蛋', en: 'egg', pinyin: 'jī dàn'},
+                {zh: '菜', en: 'vegetable', pinyin: 'cài'},
+                {zh: '湯', en: 'soup', pinyin: 'tāng'},
+                {zh: '糖', en: 'sugar', pinyin: 'táng'},
+                {zh: '鹽', en: 'salt', pinyin: 'yán'},
+                {zh: '油', en: 'oil', pinyin: 'yóu'},
+                {zh: '早餐', en: 'breakfast', pinyin: 'zǎo cān'}
+            ],
+            school: [
+                {zh: '課室', en: 'classroom', pinyin: 'kè shì'},
+                {zh: '圖書館', en: 'library', pinyin: 'tú shū guǎn'},
+                {zh: '操場', en: 'playground', pinyin: 'cāo chǎng'},
+                {zh: '洗手間', en: 'toilet', pinyin: 'xǐ shǒu jiān'},
+                {zh: '辦公室', en: 'office', pinyin: 'bàn gōng shì'},
+                {zh: '食堂', en: 'canteen', pinyin: 'shí táng'},
+                {zh: '校車', en: 'school bus', pinyin: 'xiào chē'},
+                {zh: '書包', en: 'schoolbag', pinyin: 'shū bāo'},
+                {zh: '桌子', en: 'desk', pinyin: 'zhuō zi'},
+                {zh: '椅子', en: 'chair', pinyin: 'yǐ zi'},
+                {zh: '黑板', en: 'blackboard', pinyin: 'hēi bǎn'},
+                {zh: '粉筆', en: 'chalk', pinyin: 'fěn bǐ'},
+                {zh: '擦膠', en: 'eraser', pinyin: 'cā jiāo'},
+                {zh: '間尺', en: 'ruler', pinyin: 'jiān chǐ'},
+                {zh: '顏色筆', en: 'color pen', pinyin: 'yán sè bǐ'},
+                {zh: '剪刀', en: 'scissors', pinyin: 'jiǎn dāo'},
+                {zh: '漿糊', en: 'glue', pinyin: 'jiàng hú'},
+                {zh: '紙', en: 'paper', pinyin: 'zhǐ'},
+                {zh: '簿', en: 'notebook', pinyin: 'bù'},
+                {zh: '校服', en: 'uniform', pinyin: 'xiào fú'}
+            ],
+            family: [
+                {zh: '爸爸', en: 'father', pinyin: 'bà ba'},
+                {zh: '媽媽', en: 'mother', pinyin: 'mā ma'},
+                {zh: '哥哥', en: 'older brother', pinyin: 'gē ge'},
+                {zh: '姐姐', en: 'older sister', pinyin: 'jiě jie'},
+                {zh: '弟弟', en: 'younger brother', pinyin: 'dì di'},
+                {zh: '妹妹', en: 'younger sister', pinyin: 'mèi mei'},
+                {zh: '爺爺', en: 'grandfather', pinyin: 'yé ye'},
+                {zh: '奶奶', en: 'grandmother', pinyin: 'nǎi nai'},
+                {zh: '公公', en: 'grandpa', pinyin: 'gōng gong'},
+                {zh: '婆婆', en: 'grandma', pinyin: 'pó po'},
+                {zh: '叔叔', en: 'uncle', pinyin: 'shū shu'},
+                {zh: '姨姨', en: 'aunt', pinyin: 'yí yi'},
+                {zh: '表哥', en: 'cousin', pinyin: 'biǎo gē'},
+                {zh: '家人', en: 'family', pinyin: 'jiā rén'},
+                {zh: '家', en: 'home', pinyin: 'jiā'},
+                {zh: '愛', en: 'love', pinyin: 'ài'},
+                {zh: '開心', en: 'happy', pinyin: 'kāi xīn'},
+                {zh: '快樂', en: 'joyful', pinyin: 'kuài lè'},
+                {zh: '溫暖', en: 'warm', pinyin: 'wēn nuǎn'},
+                {zh: '關心', en: 'care', pinyin: 'guān xīn'}
+            ],
+            actions: [
+                {zh: '吃', en: 'eat', pinyin: 'chī'},
+                {zh: '喝', en: 'drink', pinyin: 'hē'},
+                {zh: '跑', en: 'run', pinyin: 'pǎo'},
+                {zh: '走', en: 'walk', pinyin: 'zǒu'},
+                {zh: '跳', en: 'jump', pinyin: 'tiào'},
+                {zh: '坐', en: 'sit', pinyin: 'zuò'},
+                {zh: '站', en: 'stand', pinyin: 'zhàn'},
+                {zh: '睡', en: 'sleep', pinyin: 'shuì'},
+                {zh: '醒', en: 'wake up', pinyin: 'xǐng'},
+                {zh: '看', en: 'look', pinyin: 'kàn'},
+                {zh: '聽', en: 'listen', pinyin: 'tīng'},
+                {zh: '說', en: 'speak', pinyin: 'shuō'},
+                {zh: '讀', en: 'read', pinyin: 'dú'},
+                {zh: '寫', en: 'write', pinyin: 'xiě'},
+                {zh: '畫', en: 'draw', pinyin: 'huà'},
+                {zh: '唱', en: 'sing', pinyin: 'chàng'},
+                {zh: '笑', en: 'laugh', pinyin: 'xiào'},
+                {zh: '哭', en: 'cry', pinyin: 'kū'},
+                {zh: '玩', en: 'play', pinyin: 'wán'},
+                {zh: '學', en: 'learn', pinyin: 'xué'}
+            ]
+        };
+
+        const sentences = {
+            grade3: [
+                {text: '我每天早上七點____。', blank: '起床', options: ['起床', '睡覺', '吃飯', '上學'], answer: '起床'},
+                {text: '老師在____裡教我們中文。', blank: '課室', options: ['課室', '操場', '圖書館', '食堂'], answer: '課室'},
+                {text: '我喜歡吃____和水果。', blank: '米飯', options: ['米飯', '水', '茶', '湯'], answer: '米飯'},
+                {text: '弟弟在____上畫圖。', blank: '紙', options: ['紙', '書', '簿', '桌'], answer: '紙'},
+                {text: '我們在____踢足球。', blank: '操場', options: ['操場', '課室', '圖書館', '食堂'], answer: '操場'},
+                {text: '媽媽每天為我準備____。', blank: '早餐', options: ['早餐', '午餐', '晚餐', '糖水'], answer: '早餐'},
+                {text: '我____去學校上課。', blank: '每天', options: ['每天', '從不', '有時', '很少'], answer: '每天'},
+                {text: '這本____很有趣。', blank: '書', options: ['書', '筆', '椅', '桌'], answer: '書'}
+            ],
+            animals: [
+                {text: '____喜歡吃魚。', blank: '貓', options: ['貓', '狗', '兔', '鳥'], answer: '貓'},
+                {text: '____會飛。', blank: '鳥', options: ['鳥', '魚', '狗', '貓'], answer: '鳥'},
+                {text: '____在水中游。', blank: '魚', options: ['魚', '馬', '牛', '羊'], answer: '魚'},
+                {text: '____有長耳朵。', blank: '兔', options: ['兔', '虎', '獅', '熊'], answer: '兔'}
+            ]
+        };
+
+        const stories = [
+            {
+                title: 'The Cat 小貓',
+                content: '我家有一隻小貓。牠的名字叫咪咪。咪咪喜歡吃魚。牠每天在客廳裡睡覺。晚上，牠會跑到我的床上。我很喜歡咪咪。',
+                translation: 'I have a little cat at home. Its name is Mimi. Mimi likes to eat fish. It sleeps in the living room every day. At night, it runs to my bed. I like Mimi very much.'
+            },
+            {
+                title: 'My Family 我的家庭',
+                content: '我家有四個人。爸爸、媽媽、姐姐和我。爸爸是醫生，媽媽是老師。姐姐讀五年級，我讀三年級。我們一家人很快樂。',
+                translation: 'There are four people in my family. Dad, Mom, older sister, and me. Dad is a doctor, Mom is a teacher. Sister is in Grade 5, I am in Grade 3. Our family is very happy.'
+            },
+            {
+                title: 'At School 在學校',
+                content: '我今天在學校學了很多東西。中文課我學了新的詞語。數學課我學了加法。英文課我唱了歌。放學後，我和同學一起玩。今天真是開心的一天！',
+                translation: 'I learned many things at school today. In Chinese class, I learned new words. In Math class, I learned addition. In English class, I sang songs. After school, I played with classmates. Today was a happy day!'
+            }
+        ];
+
