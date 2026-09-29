@@ -164,7 +164,8 @@ function selectMatch(el) {
 }
 
 // === 3. WORD CHOICE (see English, pick the Chinese) ===
-let wcState = { answer: null };
+// Tap an option = select it AND hear the Mandarin. Submit checks the answer.
+let wcState = { answer: null, selected: null };
 
 function startWordChoice() {
     resetGameScore();
@@ -173,7 +174,7 @@ function startWordChoice() {
 
 function nextWordChoice() {
     const correct = pickWord();
-    wcState.answer = correct.zh;
+    wcState = { answer: correct.zh, selected: null };
     document.getElementById('wcPrompt').innerHTML =
         `What is <b style="color:var(--gold)">${escapeHtml(correct.en)}</b>?`;
     document.getElementById('wcPinyinHint').textContent = '';
@@ -187,17 +188,29 @@ function nextWordChoice() {
         btn.innerHTML = `<span class="opt-zh">${escapeHtml(o.zh)}</span><span class="opt-speak" title="Listen in Mandarin">🔊</span>`;
         btn.onclick = (e) => {
             if (e.target.closest('.opt-speak')) { speak(o.zh); return; }
-            answerWordChoice(btn, o.zh);
+            selectWordChoice(btn, o.zh);
         };
         grid.appendChild(btn);
     });
+    document.getElementById('wcSubmit').disabled = true;
 }
 
-function answerWordChoice(btn, zh) {
+function selectWordChoice(btn, zh) {
+    document.querySelectorAll('#wcOptions .option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    wcState.selected = zh;
+    speak(zh);
+    document.getElementById('wcSubmit').disabled = false;
+}
+
+function submitWordChoice() {
+    if (!wcState.selected) return;
     const buttons = document.querySelectorAll('#wcOptions .option-btn');
     buttons.forEach(b => b.disabled = true);
-    const correct = zh === wcState.answer;
-    btn.classList.add(correct ? 'correct' : 'wrong');
+    document.getElementById('wcSubmit').disabled = true;
+    const correct = wcState.selected === wcState.answer;
+    const sel = [...buttons].find(b => b.dataset.zh === wcState.selected);
+    if (sel) sel.classList.add(correct ? 'correct' : 'wrong');
     if (!correct) {
         buttons.forEach(b => { if (b.dataset.zh === wcState.answer) b.classList.add('correct'); });
     } else {
@@ -205,7 +218,8 @@ function answerWordChoice(btn, zh) {
     }
     document.getElementById('wcPinyinHint').textContent = 'Pinyin: ' +
         (activeWords().find(w => w.zh === wcState.answer) || {}).pinyin;
-    onAnswer(correct, 'Word Choice');    setTimeout(nextWordChoice, 1200);
+    onAnswer(correct, 'Word Choice');
+    setTimeout(nextWordChoice, 1400);
 }
 
 // === 4. LISTENING (hear the word, pick it) ===
