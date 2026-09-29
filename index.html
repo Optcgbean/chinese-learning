@@ -975,7 +975,7 @@
         // === NAVIGATION ===
         function showGame(gameId) {
             document.querySelectorAll('.game-area').forEach(el => el.classList.remove('active'));
-            document.getElementById('gameId').classList.add('active');
+            document.getElementById(gameId).classList.add('active');
             document.getElementById('gameSelect').style.display = 'none';
         }
 
