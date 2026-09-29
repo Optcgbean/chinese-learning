@@ -173,7 +173,7 @@ function startBossBattle() {
     const boss = bosses[Math.floor(Math.random() * bosses.length)];
     bossState = {
         boss, bossHp: boss.hp, playerHp: PLAYER_HP,
-        q: null, timeLeft: BOSS_TIME
+        q: null, timeLeft: BOSS_TIME, selected: null
     };
     document.getElementById('bossSprite').textContent = boss.sprite;
     document.getElementById('bossName').textContent = boss.name;
@@ -193,6 +193,8 @@ function nextBossQuestion() {
     if (!bossState || bossState.bossHp <= 0 || bossState.playerHp <= 0) return;
     const correct = pickWord();
     bossState.q = correct;
+    bossState.selected = null;
+    document.getElementById('bossSubmit').disabled = true;
     document.getElementById('bossQuestion').textContent = correct.zh;
     speak(correct.zh);
     const opts = shuffle([correct, ...otherWords(correct, 3)]);
@@ -201,11 +203,28 @@ function nextBossQuestion() {
     opts.forEach(o => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
+        btn.dataset.en = o.en;
         btn.textContent = o.en;
-        btn.onclick = () => answerBoss(btn, o.en);
+        btn.onclick = () => selectBoss(btn, o.en);
         grid.appendChild(btn);
     });
     startBossTimer();
+}
+
+// tap = choose your attack answer; Submit (Attack) confirms it
+function selectBoss(btn, en) {
+    if (!bossState) return;
+    document.querySelectorAll('#bossOptions .option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    bossState.selected = en;
+    document.getElementById('bossSubmit').disabled = false;
+}
+
+function submitBoss() {
+    if (!bossState || !bossState.selected) return;
+    const sel = [...document.querySelectorAll('#bossOptions .option-btn')]
+        .find(b => b.dataset.en === bossState.selected);
+    answerBoss(sel || null, bossState.selected);
 }
 
 function speakBossWord() {
@@ -231,6 +250,9 @@ function startBossTimer() {
 
 function answerBoss(btn, en) {
     clearInterval(bossTimerId);
+    if (bossState) bossState.selected = null;
+    const submitBtn = document.getElementById('bossSubmit');
+    if (submitBtn) submitBtn.disabled = true;
     const buttons = document.querySelectorAll('#bossOptions .option-btn');
     buttons.forEach(b => b.disabled = true);
     const correct = en === bossState.q.en;
