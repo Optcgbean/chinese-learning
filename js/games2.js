@@ -52,16 +52,16 @@ function startFillBlank() {
 }
 
 function nextFillBlank() {
-    const pool = blankTemplates.concat(assessFills);
-    const t = pool[Math.floor(Math.random() * pool.length)];
+    // exam-prep focus: only the workbook's example sentences, and distractors
+    // come only from the assessment vocab set
+    const t = assessFills[Math.floor(Math.random() * assessFills.length)];
     fbState.blank = t.blank;
     fbState.template = t;
     document.getElementById('fbSentence').innerHTML = escapeHtml(t.zh).replace('__', '<span class="blank">?</span>');
     document.getElementById('fbEnglish').textContent = t.en;
-    // distractors from the whole vocab universe, same-length preferred
-    const allZh = Array.from(new Set(Object.values(wordSets).flat().map(w => w.zh)));
-    const sameLen = shuffle(allZh.filter(z => z !== t.blank && z.length === t.blank.length));
-    const otherLen = shuffle(allZh.filter(z => z !== t.blank && z.length !== t.blank.length));
+    const setZh = (wordSets.assessment || []).map(w => w.zh);
+    const sameLen = shuffle(setZh.filter(z => z !== t.blank && z.length === t.blank.length));
+    const otherLen = shuffle(setZh.filter(z => z !== t.blank && z.length !== t.blank.length));
     fbState.bank = shuffle(sameLen.concat(otherLen).slice(0, 3).concat(t.blank));
     const bankEl = document.getElementById('fbBank');
     bankEl.innerHTML = '';
