@@ -2,6 +2,8 @@
 
 function showGame(id) {
     clearInterval(bossTimerId);
+    // boss difficulty must not leak into other games after fleeing
+    if (currentDiff === 'boss') setDifficulty('normal');
     document.querySelectorAll('.game-area, .reward-screen').forEach(g => g.classList.remove('active'));
     document.getElementById('menuScreen').style.display = 'none';
     document.getElementById(id).classList.add('active');
