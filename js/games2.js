@@ -1,7 +1,7 @@
 // === GAME ENGINE — part 2: scramble, fill blank, BOSS BATTLE ===
 
-// === 5. WORD SCRAMBLE ===
-let scState = { answer: '', given: '' };
+// === 5. WORD SCRAMBLE (tap the tiles in the correct order) ===
+let scState = { answer: '', tiles: [] };
 
 function startScramble() {
     resetGameScore();
@@ -11,23 +11,52 @@ function startScramble() {
 function nextScramble() {
     const w = pickWord();
     scState.answer = w.zh;
-    // scramble characters; ensure it's not identical to the answer
+    // scramble characters (per-instance ids so 翼翼 works); never identical to the answer
     let s;
-    do { s = shuffle(Array.from(w.zh)).join(''); } while (s === w.zh && w.zh.length > 1);
-    scState.given = s;
-    document.getElementById('scrambleDisplay').textContent = s.split('').join(' ');
+    do { s = shuffle(Array.from(w.zh).map((ch, i) => ({ ch, id: i, used: false }))); }
+    while (s.map(t => t.ch).join('') === w.zh && w.zh.length > 1);
+    scState.tiles = s;
     document.getElementById('scrambleHint').textContent = `English: ${w.en}  ·  Pinyin: ${w.pinyin}`;
-    document.getElementById('scrambleInput').value = '';
-    document.getElementById('scrambleInput').focus();
+    renderScramble();
+}
+
+function renderScramble() {
+    const build = document.getElementById('scrambleBuild');
+    const bank = document.getElementById('scrambleTiles');
+    build.innerHTML = '';
+    bank.innerHTML = '';
+    scState.tiles.filter(t => t.used).forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile in-build';
+        b.textContent = t.ch;
+        b.onclick = () => { t.used = false; renderScramble(); };
+        build.appendChild(b);
+    });
+    scState.tiles.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile' + (t.used ? ' used' : '');
+        b.textContent = t.ch;
+        if (!t.used) b.onclick = () => { t.used = true; renderScramble(); };
+        bank.appendChild(b);
+    });
+    // auto-submit once every tile is placed
+    if (scState.tiles.length && scState.tiles.every(t => t.used)) {
+        setTimeout(checkScramble, 350);
+    }
 }
 
 function checkScramble() {
-    const val = document.getElementById('scrambleInput').value.trim();
-    if (!val) return;
+    const val = scState.tiles.filter(t => t.used).map(t => t.ch).join('');
+    if (val.length !== scState.answer.length) return;
     const correct = val === scState.answer;
     onAnswer(correct, 'Word Scramble');
-    if (correct) speak(scState.answer);
-    setTimeout(nextScramble, 900);
+    if (correct) {
+        speak(scState.answer);
+        setTimeout(nextScramble, 1100);
+    } else {
+        // wrong: brief pause, then tiles bounce back
+        setTimeout(() => { scState.tiles.forEach(t => t.used = false); renderScramble(); }, 650);
+    }
 }
 
 // === 6. FILL IN THE BLANK ===

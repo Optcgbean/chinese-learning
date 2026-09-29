@@ -115,9 +115,7 @@ function init() {
         ).join('');
         sel.value = currentSet;
     }
-    // scramble: Enter key submits
-    const si = document.getElementById('scrambleInput');
-    if (si) si.addEventListener('keydown', e => { if (e.key === 'Enter') checkScramble(); });
+    // word scramble is tap-tile based now (no typing)
 }
 
 document.addEventListener('DOMContentLoaded', init);
