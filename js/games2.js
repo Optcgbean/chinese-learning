@@ -26,7 +26,7 @@ function checkScramble() {
     if (!val) return;
     const correct = val === scState.answer;
     onAnswer(correct, 'Word Scramble');
-    if (correct) speak(scState.answer, 'zh-HK');
+    if (correct) speak(scState.answer);
     setTimeout(nextScramble, 900);
 }
 
@@ -44,7 +44,7 @@ const blankTemplates = [
     { zh: '__謝你。', en: 'Thank you.', blank: '謝' }
 ];
 
-let fbState = { blank: '', bank: [] };
+let fbState = { blank: '', bank: [], template: null };
 
 function startFillBlank() {
     resetGameScore();
@@ -54,6 +54,7 @@ function startFillBlank() {
 function nextFillBlank() {
     const t = blankTemplates[Math.floor(Math.random() * blankTemplates.length)];
     fbState.blank = t.blank;
+    fbState.template = t;
     document.getElementById('fbSentence').innerHTML = escapeHtml(t.zh).replace('__', '<span class="blank">?</span>');
     document.getElementById('fbEnglish').textContent = t.en;
     const distractors = shuffle(Array.from(new Set(activeWords().map(w => w.zh))))
@@ -70,6 +71,28 @@ function nextFillBlank() {
     });
 }
 
+function speakFBQuestion() {
+    const t = fbState.template;
+    if (!t || !window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const parts = t.zh.split('__');
+    const v = pickVoice();
+    const mk = (txt) => {
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'zh-CN';
+        if (v) u.voice = v;
+        u.rate = 0.8;
+        return u;
+    };
+    const u1 = mk(parts[0]);
+    if (parts[1]) u1.onend = () => setTimeout(() => speechSynthesis.speak(mk(parts[1])), 500);
+    speechSynthesis.speak(u1);
+}
+
+function speakFBAnswer() {
+    if (fbState.blank) speak(fbState.blank);
+}
+
 function answerFillBlank(chip, z) {
     const chips = document.querySelectorAll('#fbBank .word-chip');
     chips.forEach(c => c.style.pointerEvents = 'none');
@@ -78,7 +101,7 @@ function answerFillBlank(chip, z) {
     if (!correct) chips.forEach(c => { if (c.textContent === fbState.blank) c.style.borderColor = '#22c55e'; });
     document.getElementById('fbSentence').innerHTML =
         document.getElementById('fbSentence').innerHTML.replace('<span class="blank">?</span>', `<b style="color:var(--gold)">${fbState.blank}</b>`);
-    if (correct) speak(fbState.blank, 'zh-HK');
+    if (correct) speak(fbState.blank);
     onAnswer(correct, 'Fill the Blank');
     setTimeout(nextFillBlank, 1400);
 }
@@ -125,7 +148,7 @@ function nextBossQuestion() {
     const correct = pickWord();
     bossState.q = correct;
     document.getElementById('bossQuestion').textContent = correct.zh;
-    speak(correct.zh, 'zh-HK');
+    speak(correct.zh);
     const opts = shuffle([correct, ...otherWords(correct, 3)]);
     const grid = document.getElementById('bossOptions');
     grid.innerHTML = '';
@@ -137,6 +160,10 @@ function nextBossQuestion() {
         grid.appendChild(btn);
     });
     startBossTimer();
+}
+
+function speakBossWord() {
+    if (bossState && bossState.q) speak(bossState.q.zh);
 }
 
 function startBossTimer() {
