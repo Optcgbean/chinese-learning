@@ -130,11 +130,6 @@
     <!-- 2. WORD CHOICE -->
     <div class="game-area" id="wordChoiceGame">
         <h2>🎯 Word Choice</h2>
-        <div class="diff-row"><span class="diff-label">Difficulty:</span>
-            <button class="diff-btn" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-            <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal')">Normal</button>
-            <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard <span class="mult">2x💰</span></button>
-        </div>
         <div class="center" id="wcPrompt" style="font-size:1.4rem; margin:14px 0"></div>
         <div class="options-grid" id="wcOptions"></div>
         <div class="center"><button id="wcSubmit" class="submit-btn" onclick="submitWordChoice()" disabled>✔ Submit</button></div>
@@ -152,11 +147,6 @@
     <!-- 4. LISTENING -->
     <div class="game-area" id="listeningGame">
         <h2>👂 Listening Practice</h2>
-        <div class="diff-row"><span class="diff-label">Difficulty:</span>
-            <button class="diff-btn" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-            <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal')">Normal</button>
-            <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard <span class="mult">2x💰</span></button>
-        </div>
         <div class="center">
             <button class="audio-btn-large" onclick="speak(listenState.answer)">🔊</button>
             <p style="color:var(--muted); margin:8px 0">Tap to hear again</p>
@@ -168,11 +158,6 @@
     <!-- 5. SCRAMBLE -->
     <div class="game-area" id="scrambleGame">
         <h2>🔀 Word Scramble</h2>
-        <div class="diff-row"><span class="diff-label">Difficulty:</span>
-            <button class="diff-btn" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-            <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal')">Normal</button>
-            <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard <span class="mult">2x💰</span></button>
-        </div>
         <div class="scramble-hint" id="scrambleHint"></div>
         <div class="tile-build" id="scrambleBuild"></div>
         <div class="center" style="color:var(--muted)">Tap the characters in the correct order — tap a placed tile to send it back:</div>
@@ -183,11 +168,6 @@
     <!-- 6. FILL THE BLANK -->
     <div class="game-area" id="fillBlankGame">
         <h2>✏️ Fill the Blank</h2>
-        <div class="diff-row"><span class="diff-label">Difficulty:</span>
-            <button class="diff-btn" data-diff="easy" onclick="setDifficulty('easy')">Easy</button>
-            <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal')">Normal</button>
-            <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard')">Hard <span class="mult">2x💰</span></button>
-        </div>
         <div class="sentence-target" id="fbSentence"></div>
         <div class="center">
             <button class="speak-inline" onclick="speakFBQuestion()">🔊 Sentence</button>

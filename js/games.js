@@ -4,9 +4,11 @@ let currentSet = 'assessment';
 let currentDiff = 'normal';
 let gameScore = { correct: 0, wrong: 0 };
 
+// Difficulty UI was removed 2026-09-30 (parent request) — every game pays at
+// the standard rate. Boss mode still flips currentDiff to 'boss' internally
+// for its 5x reward tier; leaving a boss game resets it to 'normal'.
 function setDifficulty(d) {
     currentDiff = d;
-    document.querySelectorAll('.diff-btn').forEach(b => b.classList.toggle('active', b.dataset.diff === d));
 }
 
 function activeWords() { return wordSets[currentSet] || wordSets.assessment; }
