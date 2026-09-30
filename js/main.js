@@ -41,7 +41,13 @@ function showReward(text) {
 // Mandarin voices only — NEVER zh-HK/yue/Cantonese.
 // On HK devices the only installed zh voice is often Cantonese (Sin-Ji), which
 // the old "any zh" fallback picked, so "Mandarin" buttons spoke Cantonese.
+// Female voice preferred (parent request 2026-09-30): we actively skip male
+// voices (Yunjian/Yunyang/Kangkang) and rank known female voices first.
 let mandarinVoices = [];
+
+const FEMALE_ZH = /xiaoxiao|xiaoyi|xiaohan|xiaomo|xiaoqiu|xiaorui|xiaoxuan|xiaoyan|xiaoyou|yunxia|yaoyao|huihui|meijia|meijia|ting-ting|tingting|婷婷|女|female|google 國語|google mandarin|google chinese/i;
+const MALE_ZH = /yunjian|yunyang|kangkang|云健|男|male/i;
+
 function refreshVoices() {
     if (!window.speechSynthesis) return;
     const vs = speechSynthesis.getVoices();
@@ -51,12 +57,25 @@ function refreshVoices() {
         return /^zh([-_](cn|tw|sg))?/i.test(v.lang.trim());
     });
 }
+function isFemale(v) {
+    return FEMALE_ZH.test(v.name) && !MALE_ZH.test(v.name);
+}
 function pickVoice() {
     if (!window.speechSynthesis) return null;
     if (!mandarinVoices.length) refreshVoices();
-    return mandarinVoices.find(v => /cn/i.test(v.lang)) ||
-           mandarinVoices.find(v => /tw/i.test(v.lang)) ||
-           mandarinVoices[0] || null;
+    const vs = mandarinVoices;
+    // 1) mainland zh-CN female
+    return vs.find(v => /cn/i.test(v.lang) && isFemale(v)) ||
+           // 2) Taiwan zh-TW female (Mandarin with Taiwan accent)
+           vs.find(v => /tw/i.test(v.lang) && isFemale(v)) ||
+           // 3) any female-marked Mandarin
+           vs.find(isFemale) ||
+           // 4) any non-male zh-CN
+           vs.find(v => /cn/i.test(v.lang) && !MALE_ZH.test(v.name)) ||
+           // 5) any non-male zh-TW
+           vs.find(v => /tw/i.test(v.lang) && !MALE_ZH.test(v.name)) ||
+           // 6) last resort: whatever Mandarin exists (better than silence)
+           vs[0] || null;
 }
 if (window.speechSynthesis) {
     refreshVoices();
