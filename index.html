@@ -95,6 +95,12 @@
                 <div class="icon">✏️</div><h3>造句 Sentence Builder</h3>
                 <p>Listen to the model sentence, then rebuild it with word tiles!</p>
             </div>
+            <div class="game-card" onclick="showGame('wrongBookGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="wrong-badge" id="wrongBadge"></div>
+                <div class="icon">📕</div><h3>錯字簿 Wrong Words</h3>
+                <p>Words you got wrong in other games — heal them all!</p>
+            </div>
             <div class="game-card" onclick="showGame('dictationGame')">
                 <div class="reward-tag">0.5💰</div>
                 <div class="icon">🎧</div><h3>默寫 Dictation</h3>
@@ -264,6 +270,22 @@
         <div class="tile-build" id="dictBuild"></div>
         <div class="center" style="color:var(--muted)">Tap the characters in order:</div>
         <div class="tile-bank" id="dictTiles"></div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
+    <!-- 13. WRONG-WORD NOTEBOOK -->
+    <div class="game-area" id="wrongBookGame">
+        <h2>📕 錯字簿 Wrong-Word Notebook</h2>
+        <div class="center" id="wbEmpty" style="display:none; padding:36px 16px; font-size:1.25rem">
+            🎉 錯字簿是空的！<br><span style="color:var(--muted); font-size:1rem">在遊戲裏答錯的字會出現在這裏。</span>
+        </div>
+        <div id="wbPlay" style="display:none">
+            <div class="center" id="wbTotal" style="color:var(--muted); margin:4px 0 10px"></div>
+            <div class="center" id="wbPrompt" style="font-size:1.5rem; margin:8px 0"></div>
+            <div class="center" id="wbHearts" style="font-size:1.25rem; margin-bottom:12px"></div>
+            <div class="options-grid" id="wbOptions"></div>
+            <div class="center" style="margin-top:12px"><button id="wbSubmit" class="submit-btn" onclick="submitWB()" disabled>✅ Check</button></div>
+        </div>
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
     </div>
 

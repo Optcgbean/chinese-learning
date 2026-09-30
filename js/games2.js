@@ -11,6 +11,7 @@ function startScramble() {
 function nextScramble() {
     const w = pickWord();
     scState.answer = w.zh;
+    quizWord = w.zh;
     // scramble characters (per-instance ids so 翼翼 works); never identical to the answer
     let s;
     do { s = shuffle(Array.from(w.zh).map((ch, i) => ({ ch, id: i, used: false }))); }
@@ -85,6 +86,7 @@ function nextFillBlank() {
     // exam-prep focus: only the workbook's example sentences, and distractors
     // come only from the assessment vocab set
     const t = assessFills[Math.floor(Math.random() * assessFills.length)];
+    quizWord = t.blank;
     fbState.blank = t.blank;
     fbState.template = t;
     fbState.selected = null;
@@ -355,6 +357,7 @@ function startSentenceBuilder() {
 function nextSentenceBuilder() {
     const s = sentenceBuilders[Math.floor(Math.random() * sentenceBuilders.length)];
     sbState.target = s;
+    quizWord = s.zh;
     let arr;
     do {
         arr = shuffle(s.chunks.map((t, i) => ({ t, id: i, used: false })));
@@ -426,6 +429,7 @@ function startDictation() {
 function nextDictation() {
     const w = pickWord();
     dcState.answer = w.zh;
+    quizWord = w.zh;
     dcState.build = [];
     dcState.attempts = 0;
     // distractor chars: from OTHER words in the active set, never from the target

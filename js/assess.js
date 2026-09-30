@@ -118,6 +118,7 @@ function nextComp() {
     let q;
     do { q = compQs[Math.floor(Math.random() * compQs.length)]; } while (compState.q && compQs.length > 1 && q.q === compState.q.q);
     compState = { q, selected: null };
+    quizWord = null; // comprehension MCQs aren't single-word drills
     document.getElementById('compQuestion').textContent = q.q;
     const grid = document.getElementById('compOptions');
     grid.innerHTML = '';

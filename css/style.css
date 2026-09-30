@@ -383,3 +383,17 @@ body {
 
 /* dictation hint (revealed after first miss) */
 #dictHint.hint-on { color: var(--gold); font-weight: bold; }
+
+/* wrong-word notebook badge on menu card */
+.wrong-badge {
+    position: absolute;
+    top: 36px;
+    right: 10px;
+    background: var(--card);
+    color: #fff;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: none;
+}

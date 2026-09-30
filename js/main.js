@@ -21,6 +21,7 @@ function showGame(id) {
         case 'comprehensionGame': startComprehension(); break;
         case 'sentenceBuilderGame': startSentenceBuilder(); break;
         case 'dictationGame': startDictation(); break;
+        case 'wrongBookGame': startWrongBook(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
     }
@@ -106,6 +107,7 @@ function init() {
     loadWallet();
     renderWallet();
     renderCombo();
+    updateWrongBadge();
     const sel = document.getElementById('wordSetSelect');
     if (sel) {
         // Assessment-prep focus: only the P3 進展性評估 set is offered.
