@@ -1,7 +1,7 @@
 // === GAME ENGINE — part 2: scramble, fill blank, BOSS BATTLE ===
 
 // === 5. WORD SCRAMBLE (tap the tiles in the correct order) ===
-let scState = { answer: '', tiles: [] };
+let scState = { answer: '', tiles: [], build: [] };
 
 function startScramble() {
     resetGameScore();
@@ -25,28 +25,28 @@ function renderScramble() {
     const bank = document.getElementById('scrambleTiles');
     build.innerHTML = '';
     bank.innerHTML = '';
-    scState.tiles.filter(t => t.used).forEach(t => {
+    scState.build.forEach(t => {
         const b = document.createElement('button');
         b.className = 'tile in-build';
         b.textContent = t.ch;
-        b.onclick = () => { t.used = false; renderScramble(); };
+        b.onclick = () => { t.used = false; scState.build = scState.build.filter(x => x !== t); renderScramble(); };
         build.appendChild(b);
     });
     scState.tiles.forEach(t => {
         const b = document.createElement('button');
         b.className = 'tile' + (t.used ? ' used' : '');
         b.textContent = t.ch;
-        if (!t.used) b.onclick = () => { t.used = true; renderScramble(); };
+        if (!t.used) b.onclick = () => { t.used = true; scState.build.push(t); renderScramble(); };
         bank.appendChild(b);
     });
     // auto-submit once every tile is placed
-    if (scState.tiles.length && scState.tiles.every(t => t.used)) {
+    if (scState.build.length === scState.tiles.length && scState.tiles.length > 0) {
         setTimeout(checkScramble, 350);
     }
 }
 
 function checkScramble() {
-    const val = scState.tiles.filter(t => t.used).map(t => t.ch).join('');
+    const val = scState.build.map(t => t.ch).join('');
     if (val.length !== scState.answer.length) return;
     const correct = val === scState.answer;
     onAnswer(correct, 'Word Scramble');
@@ -55,7 +55,7 @@ function checkScramble() {
         setTimeout(nextScramble, 1100);
     } else {
         // wrong: brief pause, then tiles bounce back
-        setTimeout(() => { scState.tiles.forEach(t => t.used = false); renderScramble(); }, 650);
+        setTimeout(() => { scState.tiles.forEach(t => t.used = false); scState.build = []; renderScramble(); }, 650);
     }
 }
 
@@ -344,7 +344,7 @@ function bossEndCheck() {
 // === 8. SENTENCE BUILDER 造句 ===
 // A target word + meaning is shown. Listen to the model sentence, then tap
 // the word-chunk tiles to rebuild the sentence in order (auto-checks when full).
-let sbState = { target: null, tiles: [] };
+let sbState = { target: null, tiles: [], build: [] };
 
 function startSentenceBuilder() {
     resetGameScore();
@@ -371,27 +371,27 @@ function renderSB() {
     const bank = document.getElementById('sbTiles');
     build.innerHTML = '';
     bank.innerHTML = '';
-    sbState.tiles.filter(t => t.used).forEach(t => {
+    sbState.build.forEach(t => {
         const b = document.createElement('button');
         b.className = 'tile sentence in-build';
         b.textContent = t.t;
-        b.onclick = () => { t.used = false; renderSB(); };
+        b.onclick = () => { t.used = false; sbState.build = sbState.build.filter(x => x !== t); renderSB(); };
         build.appendChild(b);
     });
     sbState.tiles.forEach(t => {
         const b = document.createElement('button');
         b.className = 'tile sentence' + (t.used ? ' used' : '');
         b.textContent = t.t;
-        if (!t.used) b.onclick = () => { t.used = true; renderSB(); };
+        if (!t.used) b.onclick = () => { t.used = true; sbState.build.push(t); renderSB(); };
         bank.appendChild(b);
     });
-    if (sbState.tiles.length && sbState.tiles.every(t => t.used)) {
+    if (sbState.build.length === sbState.tiles.length && sbState.tiles.length > 0) {
         setTimeout(checkSB, 350);
     }
 }
 
 function checkSB() {
-    const val = sbState.tiles.filter(t => t.used).map(t => t.t).join('');
+    const val = sbState.build.map(t => t.t).join('');
     const answer = sbState.target.chunks.join('');
     if (val.length !== answer.length) return;
     const correct = val === answer;
@@ -401,7 +401,7 @@ function checkSB() {
         document.getElementById('sbEnglish').textContent = sbState.target.en;
         setTimeout(nextSentenceBuilder, 1800);
     } else {
-        setTimeout(() => { sbState.tiles.forEach(t => t.used = false); renderSB(); }, 700);
+        setTimeout(() => { sbState.tiles.forEach(t => t.used = false); sbState.build = []; renderSB(); }, 700);
     }
 }
 
