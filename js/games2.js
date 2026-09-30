@@ -16,6 +16,7 @@ function nextScramble() {
     do { s = shuffle(Array.from(w.zh).map((ch, i) => ({ ch, id: i, used: false }))); }
     while (s.map(t => t.ch).join('') === w.zh && w.zh.length > 1);
     scState.tiles = s;
+    scState.build = [];
     document.getElementById('scrambleHint').textContent = `English: ${w.en}  ·  Pinyin: ${w.pinyin}`;
     renderScramble();
 }
@@ -359,6 +360,7 @@ function nextSentenceBuilder() {
         arr = shuffle(s.chunks.map((t, i) => ({ t, id: i, used: false })));
     } while (arr.map(x => x.t).join('') === s.chunks.join('') && s.chunks.length > 1);
     sbState.tiles = arr;
+    sbState.build = [];
     document.getElementById('sbPrompt').innerHTML =
         `用 <b style="color:var(--gold)">「${escapeHtml(s.zh)}」</b> 造句`;
     document.getElementById('sbMeaning').textContent = `${s.pinyin} — ${s.meaning}`;
