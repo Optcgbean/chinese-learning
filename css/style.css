@@ -397,3 +397,25 @@ body {
     font-weight: bold;
     display: none;
 }
+
+/* story-order: full-width sentence tiles, vertical flow */
+.story-build { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; min-height: 20px; }
+.story-bank { display: flex; flex-direction: column; gap: 8px; }
+.tile.story {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.08rem;
+    line-height: 1.35;
+    height: auto;
+    min-height: 46px;
+    padding: 10px 14px;
+    white-space: normal;
+}
+.story-num {
+    display: inline-block;
+    min-width: 1.4em;
+    margin-right: 8px;
+    color: var(--gold);
+    font-weight: bold;
+}
