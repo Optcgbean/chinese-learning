@@ -29,6 +29,17 @@ wordSets.assessment = [
 // --- 排句成段：ordered events per story (display order shuffled each round) ---
 const orderStories = [
     {
+        title: '《農夫的遺產》',
+        events: [
+            '從前，有一個老農夫和三個兒子。',
+            '農夫臨死前，叫兒子們到床前。',
+            '他說田地裏藏着寶物，要兒子們自己找出來。',
+            '兒子們天天翻土，甚麼也找不到。',
+            '翻過的泥土很鬆軟，長出很多禾苗。',
+            '兒子們終於明白：團結努力才是真正的寶物。'
+        ]
+    },
+    {
         title: '《狼來了》',
         events: [
             '有一天，牧童上山放羊。',
@@ -41,6 +52,7 @@ const orderStories = [
     {
         title: '《守株待兔》',
         events: [
+            '一個農夫在田裏耕種。',
             '兔子撞到樹幹上，死了。',
             '農夫撿起兔子，以為天天都能拾到。',
             '農夫天天坐在樹下等，不再種田。',
