@@ -380,3 +380,6 @@ body {
     padding: 10px 16px;
     line-height: 1.2;
 }
+
+/* dictation hint (revealed after first miss) */
+#dictHint.hint-on { color: var(--gold); font-weight: bold; }

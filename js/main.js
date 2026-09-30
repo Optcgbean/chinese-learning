@@ -20,6 +20,7 @@ function showGame(id) {
         case 'elementsGame': startElements(); break;
         case 'comprehensionGame': startComprehension(); break;
         case 'sentenceBuilderGame': startSentenceBuilder(); break;
+        case 'dictationGame': startDictation(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
     }

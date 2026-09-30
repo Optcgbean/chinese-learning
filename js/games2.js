@@ -414,3 +414,93 @@ function speakSBWord() {
 function speakSBSentence() {
     if (sbState.target) speak(sbState.target.chunks.join(''));
 }
+
+// === 9. DICTATION 默寫 (hear the word, build it from characters + distractors) ===
+let dcState = { answer: '', tiles: [], build: [], attempts: 0 };
+
+function startDictation() {
+    resetGameScore();
+    nextDictation();
+}
+
+function nextDictation() {
+    const w = pickWord();
+    dcState.answer = w.zh;
+    dcState.build = [];
+    dcState.attempts = 0;
+    // distractor chars: from OTHER words in the active set, never from the target
+    const targetChars = Array.from(new Set(Array.from(w.zh)));
+    const pool = Array.from(new Set(
+        activeWords().filter(x => x.zh !== w.zh).flatMap(x => Array.from(x.zh))
+    )).filter(c => !targetChars.includes(c));
+    const n = Array.from(w.zh).length;
+    const distract = shuffle(pool).slice(0, Math.min(n, pool.length));
+    let s = shuffle(Array.from(w.zh).map((ch, i) => ({ ch, id: i, used: false }))
+        .concat(distract.map((ch, i) => ({ ch, id: 100 + i, used: false }))));
+    dcState.tiles = s;
+    document.getElementById('dictHint').textContent = '👂 聽一聽，用字卡砌出詞語 Listen and build the word';
+    document.getElementById('dictHint').classList.remove('hint-on');
+    renderDict();
+    speak(w.zh);
+}
+
+function renderDict() {
+    const build = document.getElementById('dictBuild');
+    const bank = document.getElementById('dictTiles');
+    build.innerHTML = '';
+    bank.innerHTML = '';
+    dcState.build.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile in-build';
+        b.textContent = t.ch;
+        b.onclick = () => { t.used = false; dcState.build = dcState.build.filter(x => x !== t); renderDict(); };
+        build.appendChild(b);
+    });
+    dcState.tiles.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile' + (t.used ? ' used' : '');
+        b.textContent = t.ch;
+        if (!t.used) b.onclick = () => {
+            t.used = true; dcState.build.push(t); renderDict();
+        };
+        bank.appendChild(b);
+    });
+    // auto-check as soon as the build reaches the word length
+    if (dcState.build.length === Array.from(dcState.answer).length) {
+        setTimeout(checkDict, 350);
+    }
+}
+
+function checkDict() {
+    const val = dcState.build.map(t => t.ch).join('');
+    if (val.length !== Array.from(dcState.answer).length) return;
+    const correct = val === dcState.answer;
+    if (correct) {
+        if (dcState.attempts === 0) {
+            onAnswer(true, '默寫 Dictation'); // full reward + streak
+        } else {
+            // retry after hint: half reward, no streak bump
+            awardFlat(0.25, `默寫 retry: ${dcState.answer}`);
+            const fb = document.getElementById('gameFeedback');
+            if (fb) { fb.textContent = '✅ Correct! +0.25 💰 (hint was on)'; fb.className = 'feedback correct'; }
+            gameScore.correct++;
+        }
+        speak(dcState.answer);
+        setTimeout(nextDictation, 1400);
+    } else {
+        if (dcState.attempts === 0) {
+            onAnswer(false, '默寫 Dictation');
+            // first miss: reveal English + pinyin as a scaffold
+            const w = activeWords().find(x => x.zh === dcState.answer);
+            const hint = document.getElementById('dictHint');
+            hint.textContent = `💡 ${w ? `${w.en} · ${w.pinyin}` : ''} — 再試一次!`;
+            hint.classList.add('hint-on');
+            dcState.attempts = 1;
+        }
+        setTimeout(() => { dcState.tiles.forEach(t => t.used = false); dcState.build = []; renderDict(); }, 650);
+    }
+}
+
+function speakDictWord() {
+    if (dcState.answer) speak(dcState.answer);
+}
