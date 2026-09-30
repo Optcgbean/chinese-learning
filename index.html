@@ -91,9 +91,9 @@
                 <p>Reading comprehension MC — stories + vocab meanings from the assessment.</p>
             </div>
             <div class="game-card boss" onclick="showGame('bossGame')">
-                <div class="reward-tag">2.5💰/hit</div>
+                <div class="reward-tag">5💰 to win</div>
                 <div class="icon">👹</div><h3>BOSS BATTLE</h3>
-                <p>Insane demon mode! 5x Robux per hit — but the boss fights back. 10s per question!</p>
+                <p>Defeat the boss → 5 Robux! Full-HP win → 10! 5 correct in a row = SUPER ATTACK! 10s per question!</p>
             </div>
         </div>
     </div>
@@ -184,7 +184,8 @@
         <h2>👹 BOSS BATTLE — Insane Demon Mode</h2>
         <div class="boss-arena">
             <div class="boss-name" id="bossName"></div>
-            <div class="boss-sprite" id="bossSprite">👹</div>
+            <img class="boss-img" id="bossImg" src="assets/bosses/prototype.jpg" alt="Boss">
+            <div class="boss-streak" id="bossStreak"></div>
             <div class="hp-label">BOSS HP</div>
             <div class="hp-bar"><div class="hp-fill boss" id="bossHpFill"></div></div>
             <div class="hp-label" id="bossHpText"></div>

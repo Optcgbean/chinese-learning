@@ -221,6 +221,18 @@ body {
 /* === BOSS BATTLE === */
 .boss-arena { text-align: center; }
 .boss-sprite { font-size: 5rem; margin: 10px 0; animation: bossFloat 2s ease-in-out infinite; display: inline-block; }
+.boss-img {
+    width: 140px;
+    max-height: 175px;
+    object-fit: contain;
+    margin: 8px 0 4px;
+    border-radius: 14px;
+    background: #fff;
+    padding: 4px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+    animation: bossFloat 2s ease-in-out infinite;
+}
+.boss-streak { min-height: 1.3em; font-size: 0.95rem; font-weight: bold; color: var(--gold); margin-bottom: 4px; }
 @keyframes bossFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 .boss-name { font-size: 1.3rem; font-weight: bold; color: var(--card); margin-bottom: 8px; }
 .hp-bar { background: rgba(0,0,0,0.4); border-radius: 10px; height: 18px; overflow: hidden; margin: 6px auto; max-width: 420px; border: 1px solid #444; }

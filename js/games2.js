@@ -153,19 +153,26 @@ function submitFillBlank() {
 }
 
 // === 7. BOSS BATTLE 👹 ===
-// Insane-demon rules: 5x Robux multiplier, 10-second timer per question,
-// wrong answer = boss hits YOU. Beat the boss before your HP hits 0.
+// One of 4 villains appears at random. 10-second timer per question,
+// wrong answer (or timeout) = boss hits YOU for 1 HP.
+// Hits deal 1 damage; every 5th consecutive correct answer is a SUPER ATTACK
+// critical hit for 2 damage (then back to normal).
+// No per-hit Robux: WIN = 5 Robux, FLAWLESS win (full HP) = 10 Robux.
 const BOSS_HP = 10;
 const PLAYER_HP = 5;
 const BOSS_TIME = 10;
+const CRIT_STREAK = 5;
+const BOSS_REWARD = 5;
+const BOSS_REWARD_FLAWLESS = 10;
 
 let bossState = null;
 let bossTimerId = null;
 
 const bosses = [
-    { name: '字怪獸 Word Monster', sprite: '👹', hp: BOSS_HP },
-    { name: '筆順魔王 Stroke Demon', sprite: '👺', hp: BOSS_HP + 3 },
-    { name: '考試大蛇 Exam Serpent', sprite: '🐉', hp: BOSS_HP + 6 }
+    { name: 'The Prototype', img: 'assets/bosses/prototype.jpg', hp: BOSS_HP },
+    { name: 'Piggy', img: 'assets/bosses/piggy.jpg', hp: BOSS_HP },
+    { name: 'Huggy Wuggy', img: 'assets/bosses/huggy.jpg', hp: BOSS_HP },
+    { name: 'Captain Clark', img: 'assets/bosses/clark.jpg', hp: BOSS_HP }
 ];
 
 function startBossBattle() {
@@ -173,13 +180,23 @@ function startBossBattle() {
     const boss = bosses[Math.floor(Math.random() * bosses.length)];
     bossState = {
         boss, bossHp: boss.hp, playerHp: PLAYER_HP,
-        q: null, timeLeft: BOSS_TIME, selected: null
+        q: null, timeLeft: BOSS_TIME, selected: null, hitStreak: 0
     };
-    document.getElementById('bossSprite').textContent = boss.sprite;
+    const img = document.getElementById('bossImg');
+    img.src = boss.img;
+    img.alt = boss.name;
     document.getElementById('bossName').textContent = boss.name;
     setDifficulty('boss');
     renderBossBars();
+    renderBossStreak();
     nextBossQuestion();
+}
+
+function renderBossStreak() {
+    const el = document.getElementById('bossStreak');
+    if (!el) return;
+    const n = bossState ? bossState.hitStreak : 0;
+    el.textContent = n > 0 ? `⚡ Super attack in ${CRIT_STREAK - n} more!` : '';
 }
 
 function renderBossBars() {
@@ -261,14 +278,28 @@ function answerBoss(btn, en) {
         buttons.forEach(b => { if (b.textContent === bossState.q.en) b.classList.add('correct'); });
     }
     if (correct) {
-        bossState.bossHp--;
+        bossState.hitStreak++;
         bumpStreak();
-        const amt = award('boss', `Hit on ${bossState.boss.name}!`);
         gameScore.correct++;
-        flashBossHit(false);
+        let dmg = 1, crit = false;
+        if (bossState.hitStreak >= CRIT_STREAK) {
+            dmg = 2;
+            crit = true;
+            bossState.hitStreak = 0; // super attack, then back to normal
+        }
+        bossState.bossHp -= dmg;
+        renderBossStreak();
+        flashBossHit(false, crit);
         const fb = document.getElementById('gameFeedback');
-        if (fb) { fb.textContent = `⚔️ Critical hit! +${fmt(amt)} Robux`; fb.className = 'feedback correct'; }
+        if (fb) {
+            fb.textContent = crit
+                ? `⚡ SUPER ATTACK! Critical hit — ${dmg} damage!`
+                : `⚔️ Hit! ${dmg} damage — beat the boss for ${BOSS_REWARD}💰!`;
+            fb.className = 'feedback correct';
+        }
     } else {
+        bossState.hitStreak = 0;
+        renderBossStreak();
         bossState.playerHp--;
         breakStreak();
         gameScore.wrong++;
@@ -284,22 +315,26 @@ function answerBoss(btn, en) {
     setTimeout(() => bossEndCheck(), 900);
 }
 
-function flashBossHit(playerHurt) {
-    const sprite = document.getElementById('bossSprite');
-    sprite.style.transform = playerHurt ? 'translateX(0)' : '';
-    sprite.style.filter = playerHurt ? 'none' : 'brightness(2) saturate(0)';
-    setTimeout(() => { sprite.style.filter = ''; }, 250);
+function flashBossHit(playerHurt, crit) {
+    const img = document.getElementById('bossImg');
+    img.style.transform = playerHurt ? 'translateX(0)' : (crit ? 'rotate(-8deg) scale(1.15)' : 'scale(1.05)');
+    img.style.filter = playerHurt ? 'none' : (crit ? 'brightness(2.2) hue-rotate(-40deg)' : 'brightness(1.8) saturate(0)');
+    setTimeout(() => { img.style.filter = ''; img.style.transform = ''; }, 300);
 }
 
 function bossEndCheck() {
     if (!bossState) return;
     if (bossState.bossHp <= 0) {
-        // Victory! Big bonus on top of per-hit rewards.
-        const bonus = award('boss', `🏆 BOSS DEFEATED: ${bossState.boss.name}`);
-        showReward(`You defeated ${bossState.boss.name}! Victory bonus +${fmt(bonus)} 💰`);
+        // Victory pays out: 5 Robux, or 10 if you never got hit (full HP).
+        const flawless = bossState.playerHp === PLAYER_HP;
+        const reward = flawless ? BOSS_REWARD_FLAWLESS : BOSS_REWARD;
+        const amt = awardFlat(reward, `🏆 BOSS DEFEATED: ${bossState.boss.name}${flawless ? ' — FLAWLESS!' : ''}`);
+        showReward(flawless
+            ? `🏆 FLAWLESS! You beat ${bossState.boss.name} at full HP! +${fmt(amt)} Robux`
+            : `You defeated ${bossState.boss.name}! +${fmt(amt)} Robux`);
         bossState = null;
     } else if (bossState.playerHp <= 0) {
-        showReward(`${bossState.boss.name} was too strong this time... Train up and challenge it again!`);
+        showReward(`${bossState.boss.name} was too strong this time... No Robux. Win a fight for ${BOSS_REWARD}💰 — flawless for ${BOSS_REWARD_FLAWLESS}💰!`);
         bossState = null;
     } else {
         nextBossQuestion();

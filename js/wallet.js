@@ -53,6 +53,18 @@ function award(diffKey, reason) {
     return amt;
 }
 
+// Award a flat amount — no difficulty/combo multipliers.
+// Used by boss victories (5 Robux win, 10 Robux flawless).
+function awardFlat(amount, reason) {
+    wallet.balance = Math.round((wallet.balance + amount) * 100) / 100;
+    wallet.tx.unshift({ amt: amount, reason, t: Date.now() });
+    if (wallet.tx.length > 60) wallet.tx.length = 60;
+    saveWallet();
+    renderWallet();
+    showRobuxPopup(amount, false);
+    return amount;
+}
+
 function breakStreak() {
     if (streak >= COMBO_THRESHOLD) flashComboLost();
     streak = 0;
