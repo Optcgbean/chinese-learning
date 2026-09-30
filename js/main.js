@@ -22,7 +22,6 @@ function showGame(id) {
         case 'sentenceBuilderGame': startSentenceBuilder(); break;
         case 'dictationGame': startDictation(); break;
         case 'wrongBookGame': startWrongBook(); break;
-        case 'storyOrderGame': startStoryOrder(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
     }

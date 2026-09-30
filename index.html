@@ -95,11 +95,6 @@
                 <div class="icon">✏️</div><h3>造句 Sentence Builder</h3>
                 <p>Listen to the model sentence, then rebuild it with word tiles!</p>
             </div>
-            <div class="game-card" onclick="showGame('storyOrderGame')">
-                <div class="reward-tag">0.5💰</div>
-                <div class="icon">📖</div><h3>故事排序 Story Order</h3>
-                <p>Put the story sentences back in order — the whole story gets read aloud!</p>
-            </div>
             <div class="game-card" onclick="showGame('wrongBookGame')">
                 <div class="reward-tag">0.5💰</div>
                 <div class="wrong-badge" id="wrongBadge"></div>
@@ -291,18 +286,6 @@
             <div class="options-grid" id="wbOptions"></div>
             <div class="center" style="margin-top:12px"><button id="wbSubmit" class="submit-btn" onclick="submitWB()" disabled>✅ Check</button></div>
         </div>
-        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
-    </div>
-
-    <!-- 12. STORY ORDER -->
-    <div class="game-area" id="storyOrderGame">
-        <h2>📖 故事排序 Story Order</h2>
-        <div class="center" id="soTitle" style="font-size:1.35rem; color:var(--gold); margin:6px 0 2px"></div>
-        <div class="center" style="margin:6px 0 10px"><button class="speak-inline" onclick="speakStoryTitle()">🔊 Story title</button></div>
-        <div class="center" style="color:var(--muted); margin-bottom:8px">Tap the sentences in story order (beginning → end):</div>
-        <div class="story-build" id="soBuild"></div>
-        <div class="story-bank" id="soTiles"></div>
-        <div class="center" id="soEnglish" style="color:var(--muted); margin-top:8px"></div>
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
     </div>
 
