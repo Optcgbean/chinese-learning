@@ -340,3 +340,75 @@ function bossEndCheck() {
         nextBossQuestion();
     }
 }
+
+// === 8. SENTENCE BUILDER 造句 ===
+// A target word + meaning is shown. Listen to the model sentence, then tap
+// the word-chunk tiles to rebuild the sentence in order (auto-checks when full).
+let sbState = { target: null, tiles: [] };
+
+function startSentenceBuilder() {
+    resetGameScore();
+    nextSentenceBuilder();
+}
+
+function nextSentenceBuilder() {
+    const s = sentenceBuilders[Math.floor(Math.random() * sentenceBuilders.length)];
+    sbState.target = s;
+    let arr;
+    do {
+        arr = shuffle(s.chunks.map((t, i) => ({ t, id: i, used: false })));
+    } while (arr.map(x => x.t).join('') === s.chunks.join('') && s.chunks.length > 1);
+    sbState.tiles = arr;
+    document.getElementById('sbPrompt').innerHTML =
+        `用 <b style="color:var(--gold)">「${escapeHtml(s.zh)}」</b> 造句`;
+    document.getElementById('sbMeaning').textContent = `${s.pinyin} — ${s.meaning}`;
+    document.getElementById('sbEnglish').textContent = '';
+    renderSB();
+}
+
+function renderSB() {
+    const build = document.getElementById('sbBuild');
+    const bank = document.getElementById('sbTiles');
+    build.innerHTML = '';
+    bank.innerHTML = '';
+    sbState.tiles.filter(t => t.used).forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile sentence in-build';
+        b.textContent = t.t;
+        b.onclick = () => { t.used = false; renderSB(); };
+        build.appendChild(b);
+    });
+    sbState.tiles.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile sentence' + (t.used ? ' used' : '');
+        b.textContent = t.t;
+        if (!t.used) b.onclick = () => { t.used = true; renderSB(); };
+        bank.appendChild(b);
+    });
+    if (sbState.tiles.length && sbState.tiles.every(t => t.used)) {
+        setTimeout(checkSB, 350);
+    }
+}
+
+function checkSB() {
+    const val = sbState.tiles.filter(t => t.used).map(t => t.t).join('');
+    const answer = sbState.target.chunks.join('');
+    if (val.length !== answer.length) return;
+    const correct = val === answer;
+    onAnswer(correct, '造句 Sentence Builder');
+    if (correct) {
+        speak(answer);
+        document.getElementById('sbEnglish').textContent = sbState.target.en;
+        setTimeout(nextSentenceBuilder, 1800);
+    } else {
+        setTimeout(() => { sbState.tiles.forEach(t => t.used = false); renderSB(); }, 700);
+    }
+}
+
+function speakSBWord() {
+    if (sbState.target) speak(sbState.target.zh);
+}
+
+function speakSBSentence() {
+    if (sbState.target) speak(sbState.target.chunks.join(''));
+}

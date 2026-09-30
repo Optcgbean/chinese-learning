@@ -19,6 +19,7 @@ function showGame(id) {
         case 'sentenceOrderGame': startSentenceOrder(); break;
         case 'elementsGame': startElements(); break;
         case 'comprehensionGame': startComprehension(); break;
+        case 'sentenceBuilderGame': startSentenceBuilder(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
     }

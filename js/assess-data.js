@@ -118,3 +118,37 @@ const assessFills = [
     { zh: '小方上課時__秩序，受到老師的處分。', en: 'Xiao Fang disrupted class order and was punished.', blank: '破壞' },
     { zh: '護士__地替我清洗傷口。', en: 'The nurse very carefully cleaned my wound.', blank: '小心翼翼' }
 ];
+
+// --- 造句 SENTENCE BUILDER: short model sentences per target word ---
+// Grade-3 friendly vocabulary (parent request 2026-09-30). Chunks are the
+// tap-tiles; the target word always appears intact as its own tile.
+const sentenceBuilders = [
+    { zh: '苦惱', pinyin: 'kǔ nǎo', meaning: '痛苦煩惱', en: 'I forgot my homework — I feel so distressed.',
+      chunks: ['我', '忘記帶功課，', '心裏', '很', '苦惱', '。'] },
+    { zh: '苦惱', pinyin: 'kǔ nǎo', meaning: '痛苦煩惱', en: 'Xiao Ming cannot do his homework; he is very distressed.',
+      chunks: ['小明', '不會做功課，', '十分', '苦惱', '。'] },
+    { zh: '遊手好閒', pinyin: 'yóu shǒu hào xián', meaning: '不愛勞動，只愛遊玩', en: 'The little pig loafs around all day and refuses to work.',
+      chunks: ['小豬', '遊手好閒，', '不肯', '工作', '。'] },
+    { zh: '遊手好閒', pinyin: 'yóu shǒu hào xián', meaning: '不愛勞動，只愛遊玩', en: 'Brother idles about all day; Mum is very angry.',
+      chunks: ['哥哥', '整天', '遊手好閒，', '媽媽', '很生氣', '。'] },
+    { zh: '憂心', pinyin: 'yōu xīn', meaning: '憂慮、擔心', en: 'Little brother is sick; Mum is very worried.',
+      chunks: ['弟弟', '生病了，', '媽媽', '很', '憂心', '。'] },
+    { zh: '憂心', pinyin: 'yōu xīn', meaning: '憂慮、擔心', en: 'Grandma is not well; we are all worried.',
+      chunks: ['奶奶', '身體不好，', '我們', '很', '憂心', '。'] },
+    { zh: '爭先恐後', pinyin: 'zhēng xiān kǒng hòu', meaning: '爭着向前，害怕落後', en: 'The classmates all rushed to raise their hands.',
+      chunks: ['同學們', '爭先恐後地', '舉手', '。'] },
+    { zh: '爭先恐後', pinyin: 'zhēng xiān kǒng hòu', meaning: '爭着向前，害怕落後', en: 'Class is over; everyone rushed out of the classroom.',
+      chunks: ['下課了，', '大家', '爭先恐後地', '跑出', '課室', '。'] },
+    { zh: '避免', pinyin: 'bì miǎn', meaning: '設法防止某種情況發生', en: 'We must wash our hands often to avoid getting sick.',
+      chunks: ['我們', '要勤洗手，', '避免', '生病', '。'] },
+    { zh: '避免', pinyin: 'bì miǎn', meaning: '設法防止某種情況發生', en: 'Wear a mask when you go out, to avoid catching a cold.',
+      chunks: ['出門', '戴口罩，', '避免', '染上', '感冒', '。'] },
+    { zh: '破壞', pinyin: 'pò huài', meaning: '使事物受到損害', en: 'We must not damage public property.',
+      chunks: ['我們', '不要', '破壞', '公物', '。'] },
+    { zh: '破壞', pinyin: 'pò huài', meaning: '使事物受到損害', en: 'The typhoon destroyed the farmer\'s fields.',
+      chunks: ['颱風', '破壞了', '農夫的', '田地', '。'] },
+    { zh: '小心翼翼', pinyin: 'xiǎo xīn yì yì', meaning: '舉動十分謹慎，絲毫不敢疏忽', en: 'I carefully carried the hot soup.',
+      chunks: ['我', '小心翼翼地', '端着', '熱湯', '。'] },
+    { zh: '小心翼翼', pinyin: 'xiǎo xīn yì yì', meaning: '舉動十分謹慎，絲毫不敢疏忽', en: 'Little brother held the kitten very gently.',
+      chunks: ['弟弟', '小心翼翼地', '抱着', '小貓', '。'] }
+];

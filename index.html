@@ -90,6 +90,11 @@
                 <div class="icon">❓</div><h3>閱讀理解 Comprehension</h3>
                 <p>Reading comprehension MC — stories + vocab meanings from the assessment.</p>
             </div>
+            <div class="game-card" onclick="showGame('sentenceBuilderGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="icon">✏️</div><h3>造句 Sentence Builder</h3>
+                <p>Listen to the model sentence, then rebuild it with word tiles!</p>
+            </div>
             <div class="game-card boss" onclick="showGame('bossGame')">
                 <div class="reward-tag">5💰 to win</div>
                 <div class="icon">👹</div><h3>BOSS BATTLE</h3>
@@ -225,6 +230,22 @@
         <div class="center" style="margin-bottom:10px"><button class="speak-inline" onclick="speakCompQuestion()">🔊 Listen (Mandarin)</button></div>
         <div class="options-grid" id="compOptions"></div>
         <div class="center"><button id="compSubmit" class="submit-btn" onclick="submitComp()" disabled>✔ Submit</button></div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
+    <!-- 10. SENTENCE BUILDER -->
+    <div class="game-area" id="sentenceBuilderGame">
+        <h2>✏️ 造句 Sentence Builder</h2>
+        <div class="center" id="sbPrompt" style="font-size:1.5rem; margin:12px 0 4px"></div>
+        <div class="center" id="sbMeaning" style="color:var(--muted)"></div>
+        <div class="center" style="margin:10px 0">
+            <button class="speak-inline" onclick="speakSBWord()">🔊 Word</button>
+            <button class="speak-inline" onclick="speakSBSentence()">🔊 Sentence</button>
+        </div>
+        <div class="tile-build" id="sbBuild"></div>
+        <div class="center" style="color:var(--muted)">Tap the tiles to build the sentence:</div>
+        <div class="tile-bank" id="sbTiles"></div>
+        <div class="center" id="sbEnglish" style="color:var(--muted); margin-top:8px; padding:0 16px"></div>
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
     </div>
 
