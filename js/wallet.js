@@ -14,8 +14,8 @@ const DIFFICULTY = {
     boss:   { mult: 5,   label: 'BOSS 👹' }
 };
 
-const WALLET_KEY = 'clf_wallet_v2';
-const COMBO_KEY  = 'clf_combo_v2';
+const WALLET_KEY = 'clf_wallet_v3'; // v3: parent reset Oct 1, 2026 — balance zeroed
+const COMBO_KEY  = 'clf_combo_v3';
 
 let wallet = { balance: 0, tx: [] };
 let streak = 0;
