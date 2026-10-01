@@ -174,9 +174,10 @@ let bossTimerId = null;
 const bosses = [
     { name: 'The Prototype', img: 'assets/bosses/prototype.jpg', hp: BOSS_HP },
     { name: 'Piggy', img: 'assets/bosses/piggy.jpg', hp: BOSS_HP },
-    { name: 'Huggy Wuggy', img: 'assets/bosses/huggy.jpg', hp: BOSS_HP },
+    { name: 'Nightmare Huggy', img: 'assets/bosses/huggy.jpg', hp: BOSS_HP },
     { name: 'Captain Clark', img: 'assets/bosses/clark.jpg', hp: BOSS_HP },
-    { name: 'Headhunter', img: 'assets/bosses/headhunter.jpg', hp: BOSS_HP }
+    { name: 'Headhunter', img: 'assets/bosses/headhunter.jpg', hp: BOSS_HP },
+    { name: 'El Gran Maja', img: 'assets/bosses/elgranmaja.jpg', hp: BOSS_HP }
 ];
 
 function startBossBattle() {
