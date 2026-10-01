@@ -397,3 +397,6 @@ body {
     font-weight: bold;
     display: none;
 }
+
+/* idiom character-pick buttons: big, two-across */
+.idiom-char-btn { font-size: 2rem !important; padding: 16px 0 !important; }

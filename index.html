@@ -101,6 +101,11 @@
                 <div class="icon">📕</div><h3>錯字簿 Wrong Words</h3>
                 <p>Words you got wrong in other games — heal them all!</p>
             </div>
+            <div class="game-card" onclick="showGame('idiomsGame')">
+                <div class="reward-tag">0.5💰</div>
+                <div class="icon">🐯</div><h3>四字成語 Animal Idioms</h3>
+                <p>Animal four-character idioms from your worksheet — pick the right character or idiom!</p>
+            </div>
             <div class="game-card" onclick="showGame('dictationGame')">
                 <div class="reward-tag">0.5💰</div>
                 <div class="icon">🎧</div><h3>默寫 Dictation</h3>
@@ -286,6 +291,17 @@
             <div class="options-grid" id="wbOptions"></div>
             <div class="center" style="margin-top:12px"><button id="wbSubmit" class="submit-btn" onclick="submitWB()" disabled>✅ Check</button></div>
         </div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
+    </div>
+
+    <!-- 14. ANIMAL IDIOMS -->
+    <div class="game-area" id="idiomsGame">
+        <h2>🐯 四字成語 Animal Idioms</h2>
+        <div class="center" id="idPromptType" style="color:var(--muted); margin-bottom:8px"></div>
+        <div class="center" id="idSentence" style="font-size:1.15rem; line-height:1.7; margin:8px 0 14px"></div>
+        <div class="options-grid" id="idOptions"></div>
+        <div class="center" style="margin-top:12px"><button id="idSubmit" class="submit-btn" onclick="submitIdiom()" disabled>✅ Check</button></div>
+        <div class="center" id="idMeaning" style="color:var(--muted); margin-top:12px; font-size:1rem"></div>
         <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">← Menu</button></div>
     </div>
 

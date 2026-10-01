@@ -161,3 +161,96 @@ function submitComp() {
 function speakCompQuestion() {
     if (compState.q) speak(compState.q.q);
 }
+
+// --- 4. 四字成語 ANIMAL IDIOMS ---
+// Two question types from the worksheet 與動物有關的成語:
+//   char    — pick the correct character (confusable pair) to finish the idiom
+//   meaning — pick the idiom that matches the 【meaning】 in the sentence
+let idiomState = { q: null, selected: null };
+
+function startIdioms() {
+    resetGameScore();
+    nextIdiom();
+}
+
+function idiomPool() {
+    return [
+        ...idiomCharQs.map(q => ({ ...q, type: 'char' })),
+        ...idiomMeaningQs.map(q => ({ ...q, type: 'meaning' }))
+    ];
+}
+
+function nextIdiom() {
+    const pool = idiomPool();
+    let q;
+    do { q = pool[Math.floor(Math.random() * pool.length)]; }
+    while (idiomState.q && pool.length > 1 && q.idiom === idiomState.q.idiom);
+    idiomState = { q, selected: null };
+    quizWord = q.idiom; // idioms can land in the 錯字簿 too
+    document.getElementById('idMeaning').textContent = '';
+    const sent = document.getElementById('idSentence');
+    const opts = document.getElementById('idOptions');
+    opts.innerHTML = '';
+    document.getElementById('idSubmit').disabled = true;
+    if (q.type === 'char') {
+        document.getElementById('idPromptType').textContent = '選出正確的字 · Pick the right character';
+        sent.innerHTML = escapeHtml(q.context).replace('□', '<span class="blank">?</span>') +
+            ` <button class="speak-inline" onclick="speak('${q.idiom}')" title="Hear the idiom">🔊</button>`;
+        q.pair.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn idiom-char-btn';
+            btn.dataset.val = c;
+            btn.textContent = c;
+            btn.onclick = () => selectIdiom(btn, c);
+            opts.appendChild(btn);
+        });
+    } else {
+        document.getElementById('idPromptType').textContent = '選出正確的成語 · Pick the right idiom';
+        sent.innerHTML = escapeHtml(q.context).replace(/【(.+?)】/g, '<b style="color:var(--gold)">$1</b>') +
+            ` <button class="speak-inline" onclick="speak('${q.idiom}')" title="Hear the idiom">🔊</button>`;
+        shuffle(q.options.slice()).forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.style.fontSize = '1.1rem';
+            btn.dataset.val = c;
+            btn.textContent = c;
+            btn.onclick = () => selectIdiom(btn, c);
+            opts.appendChild(btn);
+        });
+    }
+}
+
+function selectIdiom(btn, val) {
+    document.querySelectorAll('#idOptions .option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    idiomState.selected = val;
+    if (idiomState.q.type === 'char') speak(val);
+    document.getElementById('idSubmit').disabled = false;
+}
+
+function submitIdiom() {
+    if (!idiomState.selected) return;
+    const q = idiomState.q;
+    const buttons = document.querySelectorAll('#idOptions .option-btn');
+    buttons.forEach(b => b.disabled = true);
+    document.getElementById('idSubmit').disabled = true;
+    // the correct option: for char type, the pair char that appears in the idiom
+    let correctVal;
+    if (q.type === 'char') {
+        correctVal = q.pair.find(c => q.idiom.includes(c));
+    } else {
+        correctVal = q.idiom;
+    }
+    const correct = idiomState.selected === correctVal;
+    const sel = [...buttons].find(b => b.dataset.val === idiomState.selected);
+    if (sel) sel.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+        const right = [...buttons].find(b => b.dataset.val === correctVal);
+        if (right) right.classList.add('correct');
+    }
+    onAnswer(correct, '四字成語 Idioms');
+    document.getElementById('idMeaning').textContent =
+        `${q.idiom} (${q.pinyin}) — ${q.meaning}`;
+    if (correct) speak(q.idiom);
+    setTimeout(nextIdiom, 2400);
+}

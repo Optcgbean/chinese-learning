@@ -164,3 +164,49 @@ const sentenceBuilders = [
     { zh: '小心翼翼', pinyin: 'xiǎo xīn yì yì', meaning: '舉動十分謹慎，絲毫不敢疏忽', en: 'Little brother held the kitten very gently.',
       chunks: ['弟弟', '小心翼翼地', '抱着', '小貓', '。'] }
 ];
+
+// --- 四字成語 ANIMAL IDIOMS (worksheet: 與動物有關的成語, Sept 30) ---
+// Char questions: pick the correct character to complete the idiom (the two
+// options are the worksheet's confusable pair). Meaning questions: pick the
+// idiom that best replaces the 【meaning】 phrase.
+const idiomCharQs = [
+    { idiom: '鴉雀無聲', pinyin: 'yā què wú shēng',
+      context: '觀眾席上鴉□無聲，大家都在專心地看魔術師的精彩表演。',
+      pair: ['雀', '鵲'],
+      meaning: '形容非常安靜，一點聲音也沒有' },
+    { idiom: '井底之蛙', pinyin: 'jǐng dǐ zhī wā',
+      context: '要是你仍不肯參加公開比賽，你只是井底之□，永遠不了解自己的能力水平。',
+      pair: ['蛙', '娃'],
+      meaning: '見識狹窄的人' },
+    { idiom: '畫蛇添足', pinyin: 'huà shé tiān zú',
+      context: '舅舅已經為這些雞翅調味，你就不要畫蛇添□，再加胡椒粉了。',
+      pair: ['足', '竹'],
+      meaning: '做了多餘的事，反而弄巧成拙' },
+    { idiom: '虎頭蛇尾', pinyin: 'hǔ tóu shé wěi',
+      context: '弟弟當初下定決心學跆拳道，結果虎□蛇尾，沒上幾課就放棄了。',
+      pair: ['頭', '投'],
+      meaning: '開始時聲勢很大，後來卻草草了事' },
+    { idiom: '盲人摸象', pinyin: 'máng rén mō xiàng',
+      context: '只有了解事情的全局，我們才不會盲人摸□，作出錯誤的判斷。',
+      pair: ['象', '像'],
+      meaning: '只了解局部，就以為了解全部' },
+    { idiom: '守株待兔', pinyin: 'shǒu zhū dài tù',
+      context: '那位模特兒守株待□，以為別人會主動邀請她拍攝照片，結果整整一個月沒有接到工作。',
+      pair: ['兔', '免'],
+      meaning: '不主動努力，只想碰運氣' }
+];
+
+const idiomMeaningQs = [
+    { idiom: '調虎離山', pinyin: 'diào hǔ lí shān',
+      context: '小惠以食物引開小狗，【使對方離開後才做事】，以便打掃寵物小屋。',
+      options: ['守株待兔', '調虎離山', '亡羊補牢', '愚公移山'],
+      meaning: '用計使對方離開，以便做事' },
+    { idiom: '亡羊補牢', pinyin: 'wáng yáng bǔ láo',
+      context: '漁網雖然破損了，但只要【在破口擴大前及時修補】，日後還可以多次使用它。',
+      options: ['亡羊補牢', '知過必改', '取長補短', '井底之蛙'],
+      meaning: '出了問題後及時補救，還不算遲' },
+    { idiom: '小鳥依人', pinyin: 'xiǎo niǎo yī rén',
+      context: '她外表柔美，說話細聲細氣，一副【溫順、可愛的樣子】，真是動人啊！',
+      options: ['迷途知返', '見多識廣', '小鳥依人', '守株待兔'],
+      meaning: '溫順、可愛的樣子' }
+];

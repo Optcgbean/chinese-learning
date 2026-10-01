@@ -131,6 +131,20 @@
                 {zh: '哭', en: 'cry', pinyin: 'kū'},
                 {zh: '玩', en: 'play', pinyin: 'wán'},
                 {zh: '學', en: 'learn', pinyin: 'xué'}
+            ],
+            // Animal four-character idioms (P3 worksheet 與動物有關的成語).
+            // Not in the word-set dropdown — used by the 四字成語 game and
+            // the 錯字簿 wrong-word notebook.
+            idioms: [
+                {zh: '鴉雀無聲', en: 'dead silent', pinyin: 'yā què wú shēng'},
+                {zh: '井底之蛙', en: 'frog in a well (narrow view)', pinyin: 'jǐng dǐ zhī wā'},
+                {zh: '畫蛇添足', en: 'ruin it by adding too much', pinyin: 'huà shé tiān zú'},
+                {zh: '虎頭蛇尾', en: 'strong start, weak finish', pinyin: 'hǔ tóu shé wěi'},
+                {zh: '盲人摸象', en: 'blind men and the elephant', pinyin: 'máng rén mō xiàng'},
+                {zh: '守株待兔', en: 'wait for luck instead of working', pinyin: 'shǒu zhū dài tù'},
+                {zh: '調虎離山', en: 'lure the tiger from the mountain', pinyin: 'diào hǔ lí shān'},
+                {zh: '亡羊補牢', en: 'fix the pen after losing sheep', pinyin: 'wáng yáng bǔ láo'},
+                {zh: '小鳥依人', en: 'sweet and gentle like a little bird', pinyin: 'xiǎo niǎo yī rén'}
             ]
         };
 
