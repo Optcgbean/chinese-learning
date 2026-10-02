@@ -179,7 +179,8 @@ const bosses = [
     { name: 'Headhunter', img: 'assets/bosses/headhunter.jpg', hp: BOSS_HP },
     { name: 'El Gran Maja', img: 'assets/bosses/elgranmaja.jpg', hp: BOSS_HP },
     { name: 'Candle Brute', img: 'assets/bosses/candlebrute.jpg', hp: BOSS_HP },
-    { name: 'Mothza Supreme', img: 'assets/bosses/mothza.jpg', hp: BOSS_HP }
+    { name: 'Mothza Supreme', img: 'assets/bosses/mothza.jpg', hp: BOSS_HP },
+    { name: 'The Caroler', img: 'assets/bosses/caroler.jpg', hp: BOSS_HP }
 ];
 
 function startBossBattle() {
