@@ -25,6 +25,7 @@ function showGame(id) {
         case 'wrongBookGame': startWrongBook(); break;
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
+        case 'dictBossGame': startDictBoss(); break;
     }
 }
 

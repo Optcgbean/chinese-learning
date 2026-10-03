@@ -513,3 +513,303 @@ function checkDict() {
 function speakDictWord() {
     if (dcState.answer) speak(dcState.answer);
 }
+
+// === 7b. 聽寫魔王 DICTATION BOSS ===
+// Same bosses, same HP economy as BOSS BATTLE — but you attack by BUILDING
+// the word the boss shouts: hear the Mandarin, tap character tiles in order.
+// The tile bank deliberately includes homophone confusables (同音字) so every
+// wrong pick is a teaching moment. The boss's FIRST attack each fight comes
+// straight from the 錯字簿 (yesterday's misses come back for revenge).
+const DB_TIME = 12;
+let dbState = null;
+let dbTimerId = null;
+let dbCharSyl = null; // lazy char -> toneless syllable map
+
+// 微教學 one-liners shown when a confusable pair is missed
+const dictTips = {
+    '辛': '「辛」= 辛苦、辛勞（勞碌）',
+    '心': '「心」= 心臟（身體器官）',
+    '惱': '「惱」= 苦惱（唔開心）',
+    '腦': '「腦」= 腦筋（諗嘢嘅器官）',
+    '筋': '「筋」= 肌肉（筋疲力盡）',
+    '盡': '「盡」= 完（用盡）',
+    '力': '「力」= 力量',
+    '利': '「利」= 勝利（贏）',
+    '離': '「離」= 離開',
+    '手': '「手」= 對手仔',
+    '守': '「守」= 守住（守株待兔）',
+    '憂': '「憂」= 憂心（擔心）',
+    '遊': '「遊」= 遊玩（遊手好閒）',
+    '油': '「油」= 食油',
+    '免': '「免」= 避免（唔使）',
+    '麵': '「麵」= 麵條（食物）',
+    '勝': '「勝」= 勝利',
+    '聲': '「聲」= 聲音',
+    '命': '「命」= 生命',
+    '明': '「明」= 明日',
+    '小': '「小」= 大小',
+    '笑': '「笑」= 笑容',
+    '校': '「校」= 學校',
+    '透': '「透」= 穿過（傷透）',
+    '頭': '「頭」= 頭部',
+    '破': '「破」= 破壞',
+    '婆': '「婆」= 老婆婆',
+    '苦': '「苦」= 辛苦',
+    '哭': '「哭」= 喊',
+    '避': '「避」= 避免（閃開）',
+    '筆': '「筆」= 鉛筆',
+    '後': '「後」= 前後',
+    '猴': '「猴」= 猴子',
+    '蛙': '「蛙」= 青蛙（动物，虫字部）',
+    '娃': '「娃」= 女娃（女字部）',
+    '挖': '「挖」= 挖掘（用手）',
+    '兔': '「兔」= 兔子（記住尾巴嗰一點）',
+    '先': '「先」= 先後',
+    '閒': '「閒」= 得閒（遊手好閒）',
+    '何': '「何」= 任何',
+    '喝': '「喝」= 喝水',
+    '漸': '「漸」= 漸漸（慢慢）',
+    '剪': '「剪」= 剪刀',
+    '間': '「間」= 時間',
+    '翼': '「翼」= 翼（小心翼翼）',
+    '依': '「依」= 依靠',
+    '蟻': '「蟻」= 螞蟻',
+    '不': '「不」= 唔',
+    '簿': '「簿」= 簿仔',
+    '補': '「補」= 補救（亡羊補牢）'
+};
+
+function dbSyllables(py) {
+    return (String(py || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .toLowerCase().match(/[a-z]+/g) || []);
+}
+
+function dbBuildCharMap() {
+    const map = {};
+    allWords().forEach(w => {
+        const syls = dbSyllables(w.pinyin);
+        const chars = [...w.zh];
+        if (syls.length === chars.length) {
+            chars.forEach((c, i) => { if (!map[c]) map[c] = syls[i]; });
+        }
+    });
+    return map;
+}
+
+function dbMakeBank(word) {
+    if (!dbCharSyl) dbCharSyl = dbBuildCharMap();
+    const chars = [...word];
+    const pool = [];
+    chars.forEach(c => {
+        const syl = dbCharSyl[c];
+        if (!syl) return;
+        const mates = Object.keys(dbCharSyl).filter(k =>
+            k !== c && dbCharSyl[k] === syl && !chars.includes(k) && !pool.includes(k));
+        shuffle(mates).slice(0, 2).forEach(m => pool.push(m));
+    });
+    const extra = shuffle(allWords().flatMap(w => [...w.zh])
+        .filter(c => !chars.includes(c) && !pool.includes(c)));
+    while (pool.length < chars.length + 4 && extra.length) pool.push(extra.pop());
+    return shuffle([...chars, ...pool]).map((t, i) => ({ t, id: i, used: false }));
+}
+
+// The first attack of every fight raids the 錯字簿 (spaced repetition)
+function dbPickWord(isFirst) {
+    if (isFirst) {
+        const b = getWrongBook();
+        const keys = Object.keys(b);
+        if (keys.length) {
+            const weighted = keys.flatMap(k => Array(Math.max(1, b[k].n)).fill(k));
+            const zh = weighted[Math.floor(Math.random() * weighted.length)];
+            const w = allWords().find(x => x.zh === zh);
+            if (w) return w;
+        }
+    }
+    return pickWord();
+}
+
+function startDictBoss() {
+    resetGameScore();
+    const boss = bosses[Math.floor(Math.random() * bosses.length)];
+    dbState = {
+        boss, bossHp: boss.hp, playerHp: PLAYER_HP,
+        q: null, build: [], tiles: [], hitStreak: 0, timeLeft: DB_TIME, round: 0
+    };
+    const img = document.getElementById('dbBossImg');
+    img.src = boss.img;
+    img.alt = boss.name;
+    document.getElementById('dbBossName').textContent = boss.name;
+    document.getElementById('dbStreak').textContent = '';
+    document.getElementById('dbTip').textContent = '';
+    renderDbBars();
+    nextDbQuestion();
+}
+
+function renderDbBars() {
+    document.getElementById('dbBossHpFill').style.width = (dbState.bossHp / dbState.boss.hp * 100) + '%';
+    document.getElementById('dbPlayerHpFill').style.width = (dbState.playerHp / PLAYER_HP * 100) + '%';
+    document.getElementById('dbBossHpText').textContent = `${dbState.bossHp} / ${dbState.boss.hp}`;
+    document.getElementById('dbPlayerHpText').textContent = `${dbState.playerHp} / ${PLAYER_HP}`;
+}
+
+function nextDbQuestion() {
+    if (!dbState || dbState.bossHp <= 0 || dbState.playerHp <= 0) return;
+    dbState.round++;
+    const w = dbPickWord(dbState.round === 1);
+    dbState.q = w;
+    dbState.build = [];
+    quizWord = w.zh; // builds/wrong picks feed the 錯字簿
+    document.getElementById('dbAttack').disabled = true;
+    document.getElementById('dbTip').textContent = '';
+    document.getElementById('dbPrompt').innerHTML = '聽清楚，砌返出嚟！Build the word you hear!';
+    dbState.tiles = dbMakeBank(w.zh);
+    renderDbTiles();
+    setTimeout(() => { if (dbState && dbState.q === w) speak(w.zh); }, 400);
+    startDbTimer();
+}
+
+function renderDbTiles() {
+    const build = document.getElementById('dbBuild');
+    const bank = document.getElementById('dbBank');
+    build.innerHTML = '';
+    bank.innerHTML = '';
+    dbState.build.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile in-build';
+        b.style.fontSize = '1.5rem';
+        b.textContent = t.t;
+        b.onclick = () => { t.used = false; dbState.build = dbState.build.filter(x => x !== t); renderDbTiles(); };
+        build.appendChild(b);
+    });
+    for (let i = dbState.build.length; i < dbState.q.zh.length; i++) {
+        const ph = document.createElement('div');
+        ph.className = 'tile';
+        ph.style.fontSize = '1.5rem';
+        ph.style.opacity = '0.25';
+        ph.textContent = '？';
+        build.appendChild(ph);
+    }
+    dbState.tiles.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tile' + (t.used ? ' used' : '');
+        b.style.fontSize = '1.5rem';
+        b.textContent = t.t;
+        if (!t.used) b.onclick = () => {
+            t.used = true;
+            dbState.build.push(t);
+            renderDbTiles();
+        };
+        bank.appendChild(b);
+    });
+    document.getElementById('dbAttack').disabled =
+        dbState.build.length !== dbState.q.zh.length;
+}
+
+function speakDbWord() {
+    if (dbState && dbState.q) speak(dbState.q.zh);
+}
+
+function startDbTimer() {
+    clearInterval(dbTimerId);
+    dbState.timeLeft = DB_TIME;
+    const el = document.getElementById('dbTimer');
+    el.textContent = `⏱️ ${dbState.timeLeft}s`;
+    el.style.color = '';
+    dbTimerId = setInterval(() => {
+        dbState.timeLeft--;
+        el.textContent = `⏱️ ${dbState.timeLeft}s`;
+        if (dbState.timeLeft <= 3) el.style.color = '#ef4444';
+        if (dbState.timeLeft <= 0) {
+            clearInterval(dbTimerId);
+            resolveDb(false, true);
+        }
+    }, 1000);
+}
+
+function submitDb() {
+    if (!dbState || dbState.build.length !== dbState.q.zh.length) return;
+    const attempt = dbState.build.map(t => t.t).join('');
+    resolveDb(attempt === dbState.q.zh, false, attempt);
+}
+
+function dbFlash(playerHurt, crit) {
+    const img = document.getElementById('dbBossImg');
+    img.style.transform = playerHurt ? 'translateX(0)' : (crit ? 'rotate(-8deg) scale(1.15)' : 'scale(1.05)');
+    img.style.filter = playerHurt ? 'none' : (crit ? 'brightness(2.2) hue-rotate(-40deg)' : 'brightness(1.8) saturate(0)');
+    setTimeout(() => { img.style.filter = ''; img.style.transform = ''; }, 300);
+}
+
+function resolveDb(correct, timedOut, attempt) {
+    clearInterval(dbTimerId);
+    const q = dbState.q;
+    const fb = document.getElementById('gameFeedback');
+    if (correct) {
+        noteAnswer(true); // heals if this word was in the 錯字簿
+        dbState.hitStreak++;
+        bumpStreak();
+        gameScore.correct++;
+        let dmg = 1, crit = false;
+        if (dbState.hitStreak >= CRIT_STREAK) {
+            dmg = 2; crit = true; dbState.hitStreak = 0;
+        }
+        dbState.bossHp -= dmg;
+        document.getElementById('dbStreak').textContent =
+            dbState.hitStreak > 0 ? `⚡ Super attack in ${CRIT_STREAK - dbState.hitStreak} more!` : '';
+        dbFlash(false, crit);
+        if (fb) {
+            fb.innerHTML = (crit ? `⚡ SUPER ATTACK! Critical hit — ${dmg} damage! ` : `⚔️ Hit! ${dmg} damage! `) +
+                `「<b>${q.zh}</b> ${q.pinyin} — ${q.en}`;
+            fb.className = 'feedback correct';
+        }
+    } else {
+        noteAnswer(false);
+        dbState.hitStreak = 0;
+        document.getElementById('dbStreak').textContent = '';
+        dbState.playerHp--;
+        breakStreak();
+        gameScore.wrong++;
+        dbFlash(true, false);
+        // 微教學: show tips for the specific confusable characters missed
+        let tip = '';
+        if (!timedOut && attempt) {
+            const wrongChars = [...attempt].filter((c, i) => c !== q.zh[i]);
+            const lines = [];
+            wrongChars.forEach(c => {
+                const right = q.zh[[...attempt].indexOf(c)];
+                if (dictTips[c]) lines.push(dictTips[c]);
+                if (right && dictTips[right]) lines.push(dictTips[right]);
+            });
+            tip = [...new Set(lines)].slice(0, 2).join('　');
+        }
+        document.getElementById('dbTip').innerHTML = tip ||
+            `正確答案：<b style="color:var(--gold)">${q.zh}</b>（${q.pinyin}）`;
+        if (fb) {
+            fb.textContent = timedOut
+                ? `⏰ Too slow! ${dbState.boss.name} hit you!`
+                : `💥 ${dbState.boss.name} hit you! Listen again: 「${q.zh}」`;
+            fb.className = 'feedback wrong';
+        }
+        if (!timedOut) speak(q.zh);
+    }
+    renderDbBars();
+    updateGameStats();
+    setTimeout(dbEndCheck, 1100);
+}
+
+function dbEndCheck() {
+    if (!dbState) return;
+    if (dbState.bossHp <= 0) {
+        const flawless = dbState.playerHp === PLAYER_HP;
+        const reward = flawless ? BOSS_REWARD_FLAWLESS : BOSS_REWARD;
+        const amt = awardFlat(reward, `🏆 聽寫魔王 DICTATION BOSS: ${dbState.boss.name}${flawless ? ' — FLAWLESS!' : ''}`);
+        showReward(flawless
+            ? `🏆 FLAWLESS! You beat ${dbState.boss.name} at full HP! +${fmt(amt)} Robux`
+            : `You defeated ${dbState.boss.name}! +${fmt(amt)} Robux`);
+        dbState = null;
+    } else if (dbState.playerHp <= 0) {
+        showReward(`${dbState.boss.name} was too strong this time... No Robux. Win for ${BOSS_REWARD}💰 — flawless for ${BOSS_REWARD_FLAWLESS}💰!`);
+        dbState = null;
+    } else {
+        nextDbQuestion();
+    }
+}

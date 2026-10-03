@@ -116,7 +116,36 @@
                 <div class="icon">👹</div><h3>BOSS BATTLE</h3>
                 <p>Defeat the boss → 5 Robux! Full-HP win → 10! 5 correct in a row = SUPER ATTACK! 10s per question!</p>
             </div>
+            <div class="game-card boss" onclick="showGame('dictBossGame')">
+                <div class="reward-tag">5💰 to win</div>
+                <div class="icon">🎧</div><h3>聽寫魔王 Dictation Boss</h3>
+                <p>Hear the word, build it from character tiles — watch out for tricky same-sound characters! Full-HP win → 10💰!</p>
+            </div>
         </div>
+    </div>
+
+    <!-- 7b. DICTATION BOSS -->
+    <div class="game-area" id="dictBossGame">
+        <h2>🎧 聽寫魔王 Dictation Boss</h2>
+        <div class="boss-arena">
+            <div class="boss-name" id="dbBossName"></div>
+            <img class="boss-img" id="dbBossImg" src="assets/bosses/prototype.jpg" alt="Boss">
+            <div class="boss-streak" id="dbStreak"></div>
+            <div class="hp-label">BOSS HP</div>
+            <div class="hp-bar"><div class="hp-fill boss" id="dbBossHpFill"></div></div>
+            <div class="hp-label" id="dbBossHpText"></div>
+            <div class="hp-label" style="margin-top:10px">YOUR HP</div>
+            <div class="hp-bar"><div class="hp-fill player" id="dbPlayerHpFill"></div></div>
+            <div class="hp-label" id="dbPlayerHpText"></div>
+            <div class="boss-q" id="dbPrompt">聽清楚，砌返出嚟！</div>
+            <div class="center" style="margin:6px 0"><button class="speak-inline" onclick="speakDbWord()">🔊 Listen again (Mandarin)</button></div>
+            <div class="boss-timer" id="dbTimer"></div>
+            <div class="tile-build" id="dbBuild"></div>
+            <div class="tile-bank" id="dbBank" style="margin-top:10px"></div>
+            <div class="center"><button id="dbAttack" class="submit-btn" onclick="submitDb()" disabled>⚔️ Attack!</button></div>
+            <div class="center" id="dbTip" style="color:var(--muted); margin-top:10px; font-size:0.95rem"></div>
+        </div>
+        <div class="nav-row"><button class="btn btn-secondary" onclick="backToMenu()">🏳️ Flee (keep your Robux)</button></div>
     </div>
 
     <!-- SHARED GAME CHROME -->
