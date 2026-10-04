@@ -813,3 +813,135 @@ function dbEndCheck() {
         nextDbQuestion();
     }
 }
+
+// === 15. 成語補字 ANIMAL IDIOM FILL ===
+// An animal idiom shows with one of its 4 characters blanked out (random
+// position). Pick the missing character from 3 options — distractors prefer
+// same-sound characters from other idioms (同音字陷阱). 10 questions per round;
+// every answer feeds the 錯字簿 so missed idioms come back in Dictation Boss.
+const AF_ROUNDS = 10;
+let afState = null;
+let afCharSyl = null; // lazy char -> syllable map from the idiom pool
+
+function afIdioms() { return wordSets.idioms.slice(); }
+
+function afBase(py) {
+    return String(py || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+function afBuildCharMap() {
+    const map = {};
+    afIdioms().forEach(w => {
+        const syls = w.pinyin.split(/\s+/);
+        [...w.zh].forEach((c, i) => { if (syls[i] && !map[c]) map[c] = syls[i]; });
+    });
+    return map;
+}
+
+function afDistractors(answer, siblingChars) {
+    if (!afCharSyl) afCharSyl = afBuildCharMap();
+    const ansSyl = afBase(afCharSyl[answer] || '');
+    const pool = [...new Set(afIdioms().flatMap(w => [...w.zh]))]
+        .filter(c => c !== answer && !siblingChars.includes(c));
+    const homs = shuffle(pool.filter(c => afCharSyl[c] && afBase(afCharSyl[c]) === ansSyl));
+    const rest = shuffle(pool.filter(c => !homs.includes(c)));
+    return [...homs, ...rest].slice(0, 2);
+}
+
+function startAnimalFill() {
+    resetGameScore();
+    const queue = shuffle(afIdioms()).slice(0, AF_ROUNDS)
+        .map(w => ({ w, blank: Math.floor(Math.random() * 4) }));
+    afState = { queue, idx: 0, q: null, selected: null };
+    nextAf();
+}
+
+function nextAf() {
+    const fb = document.getElementById('gameFeedback');
+    if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    if (afState.idx >= AF_ROUNDS) {
+        const s = afState;
+        afState = null;
+        showReward(`🐾 成語補字 complete! ✅ ${gameScore.correct} / ${s ? s.idx : AF_ROUNDS} ` +
+            `— ${gameScore.wrong === 0 ? 'PERFECT! All idioms fixed!' : gameScore.wrong + ' to practice in the 錯字簿.'}`);
+        return;
+    }
+    const item = afState.queue[afState.idx];
+    const chars = [...item.w.zh];
+    const answer = chars[item.blank];
+    afState.q = { w: item.w, blank: item.blank, answer };
+    afState.selected = null;
+    quizWord = item.w.zh; // missed idioms land in the 錯字簿
+    document.getElementById('afProgress').textContent =
+        `Q${afState.idx + 1} / ${AF_ROUNDS}`;
+    document.getElementById('afMeaning').textContent = '';
+    // idiom tiles with one random blank
+    const row = document.getElementById('afTiles');
+    row.innerHTML = '';
+    chars.forEach((c, i) => {
+        const t = document.createElement('div');
+        t.className = 'tile';
+        t.style.fontSize = '2.2rem';
+        t.style.minWidth = '64px';
+        if (i === item.blank) {
+            t.textContent = '？';
+            t.style.color = 'var(--gold)';
+            t.style.borderColor = 'var(--gold)';
+            t.style.opacity = '1';
+            t.id = 'afBlankTile';
+        } else {
+            t.textContent = c;
+        }
+        row.appendChild(t);
+    });
+    const opts = shuffle([answer, ...afDistractors(answer, chars)]);
+    const grid = document.getElementById('afOptions');
+    grid.innerHTML = '';
+    opts.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.style.fontSize = '1.6rem';
+        btn.dataset.val = c;
+        btn.textContent = c;
+        btn.onclick = () => selectAf(btn, c);
+        grid.appendChild(btn);
+    });
+    document.getElementById('afSubmit').disabled = true;
+    setTimeout(() => { if (afState && afState.q === item) speak(item.w.zh); }, 350);
+}
+
+function selectAf(btn, val) {
+    document.querySelectorAll('#afOptions .option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    afState.selected = val;
+    speak(val);
+    document.getElementById('afSubmit').disabled = false;
+}
+
+function afSpeak() { if (afState && afState.q) speak(afState.q.w.zh); }
+
+function submitAf() {
+    if (!afState || !afState.selected) return;
+    const q = afState.q;
+    const correct = afState.selected === q.answer;
+    const buttons = document.querySelectorAll('#afOptions .option-btn');
+    buttons.forEach(b => b.disabled = true);
+    document.getElementById('afSubmit').disabled = true;
+    const sel = [...buttons].find(b => b.dataset.val === afState.selected);
+    if (sel) sel.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+        buttons.forEach(b => { if (b.dataset.val === q.answer) b.classList.add('correct'); });
+    }
+    // fill the blank tile with the right character
+    const blank = document.getElementById('afBlankTile');
+    if (blank) {
+        blank.textContent = q.answer;
+        blank.style.color = correct ? '#2ea36b' : '#e74c3c';
+    }
+    document.getElementById('afMeaning').innerHTML =
+        `<b>${q.w.pinyin}</b> — ${q.w.en}`;
+    speak(q.w.zh);
+    onAnswer(correct, '成語補字 Animal Idiom Fill');
+    afState.idx++;
+    setTimeout(nextAf, 1700);
+}

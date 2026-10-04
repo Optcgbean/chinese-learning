@@ -26,6 +26,7 @@ function showGame(id) {
         case 'fillBlankGame': startFillBlank(); break;
         case 'bossGame': startBossBattle(); break;
         case 'dictBossGame': startDictBoss(); break;
+        case 'animalFillGame': startAnimalFill(); break;
     }
 }
 

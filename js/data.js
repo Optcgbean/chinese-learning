@@ -144,7 +144,22 @@
                 {zh: '守株待兔', en: 'wait for luck instead of working', pinyin: 'shǒu zhū dài tù'},
                 {zh: '調虎離山', en: 'lure the tiger from the mountain', pinyin: 'diào hǔ lí shān'},
                 {zh: '亡羊補牢', en: 'fix the pen after losing sheep', pinyin: 'wáng yáng bǔ láo'},
-                {zh: '小鳥依人', en: 'sweet and gentle like a little bird', pinyin: 'xiǎo niǎo yī rén'}
+                {zh: '小鳥依人', en: 'sweet and gentle like a little bird', pinyin: 'xiǎo niǎo yī rén'},
+                {zh: '狐假虎威', en: 'bully people by flinching power', pinyin: 'hú jiǎ hǔ wēi'},
+                {zh: '龍爭虎鬥', en: 'fierce fight between two rivals', pinyin: 'lóng zhēng hǔ dòu'},
+                {zh: '笨鳥先飛', en: 'slow starters should start early', pinyin: 'bèn niǎo xiān fēi'},
+                {zh: '對牛彈琴', en: 'casting pearls before swine', pinyin: 'duì niú tán qín'},
+                {zh: '鶴立雞群', en: 'stand out like a crane among chickens', pinyin: 'hè lì jī qún'},
+                {zh: '九牛一毛', en: 'a drop in the bucket', pinyin: 'jiǔ niú yī máo'},
+                {zh: '雞犬不寧', en: 'total uproar, nobody rests', pinyin: 'jī quǎn bù níng'},
+                {zh: '畫龍點睛', en: 'the finishing touch', pinyin: 'huà lóng diǎn jīng'},
+                {zh: '指鹿為馬', en: 'call a deer a horse (twist the truth)', pinyin: 'zhǐ lù wéi mǎ'},
+                {zh: '塞翁失馬', en: 'a blessing in disguise', pinyin: 'sài wēng shī mǎ'},
+                {zh: '驚弓之鳥', en: 'once bitten, twice shy', pinyin: 'jīng gōng zhī niǎo'},
+                {zh: '如魚得水', en: 'in your element, thriving', pinyin: 'rú yú dé shuǐ'},
+                {zh: '一鳴驚人', en: 'amaze everyone in one move', pinyin: 'yī míng jīng rén'},
+                {zh: '馬到成功', en: 'win the moment you arrive', pinyin: 'mǎ dào chéng gōng'},
+                {zh: '雞飛狗跳', en: 'complete chaos', pinyin: 'jī fēi gǒu tiào'}
             ]
         };
 
